@@ -10,6 +10,7 @@ public class UnitOfWork : IUnitOfWork
     public IUserRepository Users { get; }
     public ICategoryRepository Categories { get; }
     public IProductRepository Products { get; }
+    public IOrderRepository Orders { get; private set; }
 
     public UnitOfWork(AppDbContext context)
     {
@@ -18,6 +19,7 @@ public class UnitOfWork : IUnitOfWork
         Users = new UserRepository(_context);
         Categories = new CategoryRepository(_context);
         Products = new ProductRepository(_context);
+        Orders = new OrderRepository(_context);
     }
 
     public async Task CompleteAsync(CancellationToken cancellationToken = default)
