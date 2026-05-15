@@ -6,5 +6,9 @@ public interface IUnitOfWork
     ICategoryRepository Categories { get; }
     IProductRepository Products { get; }
     IOrderRepository Orders { get; }
-    Task CompleteAsync(CancellationToken cancellationToken = default);
+
+    Task SaveChangesAsync(CancellationToken cancellationToken = default);
+    Task BeginTransactionAsync();
+    Task CommitTransactionAsync(CancellationToken cancellationToken = default);
+    Task RollbackTransactionAsync();
 }

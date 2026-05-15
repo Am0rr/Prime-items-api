@@ -3,6 +3,7 @@ using Microsoft.Extensions.Configuration;
 using PI.DAL.Persistence;
 using Microsoft.EntityFrameworkCore;
 using PI.DAL.Interfaces;
+using PI.DAL.Repositories;
 
 namespace PI.DAL;
 
@@ -12,6 +13,11 @@ public static class DependencyInjection
     {
         services.AddDbContext<AppDbContext>(options =>
         options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
+
+        services.AddScoped<IUserRepository, UserRepository>();
+        services.AddScoped<ICategoryRepository, CategoryRepository>();
+        services.AddScoped<IProductRepository, ProductRepository>();
+        services.AddScoped<IOrderRepository, OrderRepository>();
 
         services.AddScoped<IUnitOfWork, UnitOfWork>();
 
