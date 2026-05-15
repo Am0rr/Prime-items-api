@@ -33,7 +33,7 @@ public class ProductService : IProductService
             request.ImageUrl);
 
         await _unitOfWork.Products.AddAsync(product);
-        await _unitOfWork.CompleteAsync();
+        await _unitOfWork.SaveChangesAsync();
 
         return product.Id;
     }
@@ -87,7 +87,7 @@ public class ProductService : IProductService
         if (!hasChanges) return;
 
         _unitOfWork.Products.Update(product);
-        await _unitOfWork.CompleteAsync();
+        await _unitOfWork.SaveChangesAsync();
     }
 
     public async Task DeleteAsync(Guid id)
@@ -97,7 +97,7 @@ public class ProductService : IProductService
             throw new KeyNotFoundException($"Product with ID {id} was not found.");
 
         _unitOfWork.Products.Delete(product);
-        await _unitOfWork.CompleteAsync();
+        await _unitOfWork.SaveChangesAsync();
     }
 
     public async Task<ProductResponse?> GetByIdAsync(Guid id)

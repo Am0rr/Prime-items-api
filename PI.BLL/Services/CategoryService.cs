@@ -22,7 +22,7 @@ public class CategoryService : ICategoryService
         var category = Category.Create(request.Name, request.Description);
 
         await _unitOfWork.Categories.AddAsync(category);
-        await _unitOfWork.CompleteAsync();
+        await _unitOfWork.SaveChangesAsync();
 
         return category.Id;
     }
@@ -49,7 +49,7 @@ public class CategoryService : ICategoryService
         if (!hasChanges) return;
 
         _unitOfWork.Categories.Update(category);
-        await _unitOfWork.CompleteAsync();
+        await _unitOfWork.SaveChangesAsync();
     }
 
     public async Task DeleteAsync(Guid id)
@@ -58,7 +58,7 @@ public class CategoryService : ICategoryService
             ?? throw new KeyNotFoundException($"Category with ID {id} was not found.");
 
         _unitOfWork.Categories.Delete(category);
-        await _unitOfWork.CompleteAsync();
+        await _unitOfWork.SaveChangesAsync();
     }
 
     public async Task<CategoryResponse?> GetByIdAsync(Guid id)
