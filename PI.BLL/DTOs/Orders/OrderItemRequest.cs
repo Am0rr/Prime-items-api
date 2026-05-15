@@ -1,5 +1,3 @@
-using System;
-
 namespace PI.BLL.DTOs.Orders;
 
 public record OrderItemRequest

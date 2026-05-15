@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-
 namespace PI.BLL.DTOs.Orders;
 
 public record CreateOrderRequest
