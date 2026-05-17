@@ -30,4 +30,9 @@ public class Order : BaseEntity
 
         return new Order(userId, totalAmount, status);
     }
+    
+    public void UpdateStatus(OrderStatus newStatus)
+    {
+        Status = newStatus;
+    }
 }
