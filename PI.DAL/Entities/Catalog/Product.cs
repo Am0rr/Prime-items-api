@@ -37,40 +37,40 @@ public class Product : BaseEntity
         return new Product(categoryId, name, description, price, stockQuantity, imageUrl);
     }
 
-    public void UpdateCategory(Guid categoryId)
+    public void ChangeCategory(Guid categoryId)
     {
         CategoryId = categoryId;
     }
 
-    public void UpdateName(string name)
+    public void ChangeName(string name)
     {
         if (string.IsNullOrWhiteSpace(name))
             throw new ArgumentException("Product name cannot be null or empty.", nameof(name));
         Name = name;
     }
 
-    public void UpdateDescription(string description)
+    public void ChangeDescription(string description)
     {
         if (string.IsNullOrWhiteSpace(description))
             throw new ArgumentException("Product description cannot be null or empty.", nameof(description));
         Description = description;
     }
 
-    public void UpdatePrice(decimal price)
+    public void ChangePrice(decimal price)
     {
         if (price < 0)
             throw new ArgumentException("Price must be a positive value.", nameof(price));
         Price = price;
     }
 
-    public void UpdateStockQuantity(int stockQuantity)
+    public void ChangeStockQuantity(int stockQuantity)
     {
         if (stockQuantity < 0)
             throw new ArgumentException("Stock quantity cannot be negative.", nameof(stockQuantity));
         StockQuantity = stockQuantity;
     }
 
-    public void UpdateImageUrl(string? imageUrl)
+    public void ChangeImageUrl(string? imageUrl)
     {
         ImageUrl = imageUrl;
     }
