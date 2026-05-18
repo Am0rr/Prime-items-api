@@ -3,6 +3,8 @@ using PI.DAL.Entities.Catalog;
 using PI.DAL.Entities.Orders;
 using PI.BLL.DTOs.Catalog;
 using PI.BLL.DTOs.Orders;
+using PI.DAL.Entities.Identity;
+using PI.BLL.DTOs.Identity;
 
 namespace PI.BLL;
 
@@ -22,5 +24,8 @@ public class MappingProfile : Profile
 
         CreateMap<Order, OrderResponse>()
             .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Status.ToString()));
+
+        CreateMap<User, UserResponse>()
+            .ForMember(dest => dest.Role, opt => opt.MapFrom(src => src.Role.ToString()));
     }
 }
