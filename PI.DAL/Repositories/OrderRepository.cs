@@ -11,7 +11,7 @@ public class OrderRepository : BaseRepository<Order>, IOrderRepository
     {
     }
 
-    public async Task<IEnumerable<Order>> GetByUserIdAsync(Guid userId, CancellationToken cancellationToken = default)
+    public async Task<IEnumerable<Order>> GetByUserIdAsync(Guid userId, CancellationToken cancellationToken)
     {
         return await _dbSet
             .AsNoTracking()
@@ -19,7 +19,7 @@ public class OrderRepository : BaseRepository<Order>, IOrderRepository
             .ToListAsync(cancellationToken);
     }
 
-    public async Task<Order?> GetWithDetailsAsync(Guid id, CancellationToken cancellationToken = default)
+    public async Task<Order?> GetWithDetailsAsync(Guid id, CancellationToken cancellationToken)
     {
         return await _dbSet
             .Include(o => o.OrderItems)

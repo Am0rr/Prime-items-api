@@ -10,7 +10,7 @@ public class ProductRepository : BaseRepository<Product>, IProductRepository
 {
     public ProductRepository(AppDbContext context) : base(context) { }
 
-    public async Task<(IEnumerable<Product> Items, int TotalCount)> GetFilteredPagedAsync(ProductFilterParams filter, CancellationToken cancellationToken = default)
+    public async Task<(IEnumerable<Product> Items, int TotalCount)> GetFilteredPagedAsync(ProductFilterParams filter, CancellationToken cancellationToken)
     {
         var query = _dbSet.AsNoTracking();
 
@@ -59,7 +59,7 @@ public class ProductRepository : BaseRepository<Product>, IProductRepository
         return (items, totalCount);
     }
 
-    public async Task<Product?> GetWithDetailsAsync(Guid id, CancellationToken cancellationToken = default)
+    public async Task<Product?> GetWithDetailsAsync(Guid id, CancellationToken cancellationToken)
     {
         return await _dbSet
             .AsNoTracking()

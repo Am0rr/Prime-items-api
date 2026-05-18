@@ -9,12 +9,12 @@ public class UserRepository : BaseRepository<User>, IUserRepository
 {
     public UserRepository(AppDbContext context) : base(context) { }
 
-    public async Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken = default)
+    public async Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken)
     {
         return await _dbSet.FirstOrDefaultAsync(u => u.Email == email, cancellationToken);
     }
 
-    public async Task<bool> ExistsByEmailAsync(string email, CancellationToken cancellationToken = default)
+    public async Task<bool> ExistsByEmailAsync(string email, CancellationToken cancellationToken)
     {
         return await _dbSet.AnyAsync(u => u.Email == email, cancellationToken);
     }

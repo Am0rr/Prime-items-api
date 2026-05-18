@@ -17,18 +17,18 @@ public class CategoryService : ICategoryService
         _mapper = mapper;
     }
 
-    public async Task<Guid> CreateAsync(CreateCategoryRequest request)
+    public async Task<Guid> CreateAsync(CreateCategoryRequest request, CancellationToken cancellationToken)
     {
         var category = Category.Create(request.Name, request.Description);
 
-        await _unitOfWork.Categories.AddAsync(category);
-        await _unitOfWork.SaveChangesAsync();
+        await _unitOfWork.Categories.AddAsync(category, cancellationToken);
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
         return category.Id;
     }
 
-    public async Task UpdateAsync(UpdateCategoryRequest request)
+    public async Task UpdateAsync(UpdateCategoryRequest request, CancellationToken cancellationToken)
     {
-        var category = await _unitOfWork.Categories.GetByIDAsync(request.Id)
+        var category = await _unitOfWork.Categories.GetByIdAsync(request.Id, cancellationToken)
             ?? throw new KeyNotFoundException($"Category with ID {request.Id} was not found.");
 
         bool hasChanges = false;
@@ -48,29 +48,29 @@ public class CategoryService : ICategoryService
         if (!hasChanges) return;
 
         _unitOfWork.Categories.Update(category);
-        await _unitOfWork.SaveChangesAsync();
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
     }
 
-    public async Task DeleteAsync(Guid id)
+    public async Task DeleteAsync(Guid id, CancellationToken cancellationToken)
     {
-        var category = await _unitOfWork.Categories.GetByIDAsync(id)
+        var category = await _unitOfWork.Categories.GetByIdAsync(id, cancellationToken)
             ?? throw new KeyNotFoundException($"Category with ID {id} was not found.");
 
         _unitOfWork.Categories.Delete(category);
-        await _unitOfWork.SaveChangesAsync();
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
     }
 
-    public async Task<CategoryResponse?> GetByIdAsync(Guid id)
+    public async Task<CategoryResponse?> GetByIdAsync(Guid id, CancellationToken cancellationToken)
     {
-        var category = await _unitOfWork.Categories.GetByIDAsync(id)
+        var category = await _unitOfWork.Categories.GetByIdAsync(id, cancellationToken)
             ?? throw new KeyNotFoundException($"Category with ID {id} was not found.");
 
         return _mapper.Map<CategoryResponse>(category);
     }
 
-    public async Task<List<CategoryResponse>> GetAllAsync()
+    public async Task<List<CategoryResponse>> GetAllAsync(CancellationToken cancellationToken)
     {
-        var categories = await _unitOfWork.Categories.GetAllAsync();
+        var categories = await _unitOfWork.Categories.GetAllAsync(cancellationToken);
         return _mapper.Map<List<CategoryResponse>>(categories);
     }
 }

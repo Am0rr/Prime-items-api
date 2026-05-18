@@ -4,9 +4,9 @@ namespace PI.DAL.Interfaces;
 
 public interface IBaseRepository<T> where T : BaseEntity
 {
-    Task<T?> GetByIDAsync(Guid id);
-    Task<IEnumerable<T>> GetAllAsync();
-    Task<Guid> AddAsync(T item);
+    Task<T?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default);
+    Task<IEnumerable<T>> GetAllAsync(CancellationToken cancellationToken = default);
+    Task<Guid> AddAsync(T item, CancellationToken cancellationToken = default);
     void Update(T item);
     void Delete(T item);
 }

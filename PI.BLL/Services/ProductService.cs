@@ -18,9 +18,9 @@ public class ProductService : IProductService
         _mapper = mapper;
     }
 
-    public async Task<Guid> CreateAsync(CreateProductRequest request)
+    public async Task<Guid> CreateAsync(CreateProductRequest request, CancellationToken cancellationToken)
     {
-        var category = await _unitOfWork.Categories.GetByIDAsync(request.CategoryId);
+        var category = await _unitOfWork.Categories.GetByIdAsync(request.CategoryId, cancellationToken);
         if (category == null)
             throw new KeyNotFoundException($"Category with ID {request.CategoryId} was not found.");
 
@@ -32,22 +32,22 @@ public class ProductService : IProductService
             request.StockQuantity,
             request.ImageUrl);
 
-        await _unitOfWork.Products.AddAsync(product);
-        await _unitOfWork.SaveChangesAsync();
+        await _unitOfWork.Products.AddAsync(product, cancellationToken);
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         return product.Id;
     }
 
-    public async Task UpdateAsync(UpdateProductRequest request)
+    public async Task UpdateAsync(UpdateProductRequest request, CancellationToken cancellationToken)
     {
-        var product = await _unitOfWork.Products.GetByIDAsync(request.Id)
+        var product = await _unitOfWork.Products.GetByIdAsync(request.Id, cancellationToken)
             ?? throw new KeyNotFoundException($"Product with ID {request.Id} was not found.");
 
         bool hasChanges = false;
 
         if (request.CategoryId != product.CategoryId)
         {
-            var category = await _unitOfWork.Categories.GetByIDAsync(request.CategoryId)
+            var category = await _unitOfWork.Categories.GetByIdAsync(request.CategoryId, cancellationToken)
                 ?? throw new KeyNotFoundException($"Category with ID {request.CategoryId} was not found.");
 
             product.UpdateCategory(request.CategoryId);
@@ -87,37 +87,37 @@ public class ProductService : IProductService
         if (!hasChanges) return;
 
         _unitOfWork.Products.Update(product);
-        await _unitOfWork.SaveChangesAsync();
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
     }
 
-    public async Task DeleteAsync(Guid id)
+    public async Task DeleteAsync(Guid id, CancellationToken cancellationToken)
     {
-        var product = await _unitOfWork.Products.GetByIDAsync(id);
+        var product = await _unitOfWork.Products.GetByIdAsync(id, cancellationToken);
         if (product == null)
             throw new KeyNotFoundException($"Product with ID {id} was not found.");
 
         _unitOfWork.Products.Delete(product);
-        await _unitOfWork.SaveChangesAsync();
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
     }
 
-    public async Task<ProductResponse?> GetByIdAsync(Guid id)
+    public async Task<ProductResponse?> GetByIdAsync(Guid id, CancellationToken cancellationToken)
     {
-        var product = await _unitOfWork.Products.GetWithDetailsAsync(id);
+        var product = await _unitOfWork.Products.GetWithDetailsAsync(id, cancellationToken);
         if (product == null)
             throw new KeyNotFoundException($"Product with ID {id} was not found.");
 
         return _mapper.Map<ProductResponse>(product);
     }
 
-    public async Task<List<ProductResponse>> GetAllAsync()
+    public async Task<List<ProductResponse>> GetAllAsync(CancellationToken cancellationToken)
     {
-        var products = await _unitOfWork.Products.GetAllAsync();
+        var products = await _unitOfWork.Products.GetAllAsync(cancellationToken);
         return _mapper.Map<List<ProductResponse>>(products);
     }
 
-    public async Task<(IEnumerable<ProductResponse> Items, int TotalCount)> GetPagedAsync(ProductFilterParams filter)
+    public async Task<(IEnumerable<ProductResponse> Items, int TotalCount)> GetPagedAsync(ProductFilterParams filter, CancellationToken cancellationToken)
     {
-        var (items, totalCount) = await _unitOfWork.Products.GetFilteredPagedAsync(filter);
+        var (items, totalCount) = await _unitOfWork.Products.GetFilteredPagedAsync(filter, cancellationToken);
 
         var mappedItems = _mapper.Map<IEnumerable<ProductResponse>>(items);
 
