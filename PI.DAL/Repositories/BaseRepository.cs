@@ -7,13 +7,11 @@ namespace PI.DAL.Repositories;
 
 public abstract class BaseRepository<T> : IBaseRepository<T> where T : BaseEntity
 {
-    protected readonly AppDbContext _context;
     protected readonly DbSet<T> _dbSet;
 
     public BaseRepository(AppDbContext context)
     {
-        _context = context;
-        _dbSet = _context.Set<T>();
+        _dbSet = context.Set<T>();
     }
 
     public async Task<T?> GetByIdAsync(Guid id, CancellationToken cancellationToken)
