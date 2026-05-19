@@ -10,7 +10,7 @@ public class RefreshToken : BaseEntity
 
     protected RefreshToken() { }
 
-    public RefreshToken(string token, DateTime expiresAt, Guid userId)
+    private RefreshToken(string token, DateTime expiresAt, Guid userId)
     {
         Token = token;
         ExpiresAt = expiresAt;
