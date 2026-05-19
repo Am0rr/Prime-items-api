@@ -1,6 +1,6 @@
 namespace PI.BLL.DTOs.Identity;
 
-public record LogitRequest(
+public record LoginRequest(
     string Email,
     string Password
 );
