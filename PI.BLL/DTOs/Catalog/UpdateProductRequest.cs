@@ -2,10 +2,10 @@
 
 public record UpdateProductRequest(
     Guid Id,
-    Guid CategoryId,
+    Guid? CategoryId,
     string Name,
     string Description,
-    decimal Price,
-    int StockQuantity,
+    decimal? Price,
+    int? StockQuantity,
     string? ImageUrl
 );

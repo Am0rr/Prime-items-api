@@ -33,15 +33,18 @@ public class CategoryService : ICategoryService
 
         bool hasChanges = false;
 
-        if (request.Name != category.Name)
+        if (request.Name != null && request.Name != category.Name)
         {
-            category.UpdateName(request.Name);
+            if (await _unitOfWork.Categories.ExistsByNameAsync(request.Name, cancellationToken))
+                throw new InvalidOperationException($"A category with the name '{request.Name}' already exists.");
+
+            category.ChangeName(request.Name);
             hasChanges = true;
         }
 
-        if (request.Description != category.Description)
+        if (request.Description != null && request.Description != category.Description)
         {
-            category.UpdateDescription(request.Description);
+            category.ChangeDescription(request.Description);
             hasChanges = true;
         }
 

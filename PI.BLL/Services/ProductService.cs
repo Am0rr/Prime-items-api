@@ -45,42 +45,45 @@ public class ProductService : IProductService
 
         bool hasChanges = false;
 
-        if (request.CategoryId != product.CategoryId)
+        if (request.CategoryId.HasValue && request.CategoryId.Value != product.CategoryId)
         {
-            var category = await _unitOfWork.Categories.GetByIdAsync(request.CategoryId, cancellationToken)
-                ?? throw new KeyNotFoundException($"Category with ID {request.CategoryId} was not found.");
+            var category = await _unitOfWork.Categories.GetByIdAsync(request.CategoryId.Value, cancellationToken)
+                ?? throw new KeyNotFoundException($"Category with ID {request.CategoryId.Value} was not found.");
 
-            product.UpdateCategory(request.CategoryId);
+            product.ChangeCategory(request.CategoryId.Value);
             hasChanges = true;
         }
 
-        if (request.Name != product.Name)
+        if (request.Name != null && request.Name != product.Name)
         {
-            product.UpdateName(request.Name);
+            if (await _unitOfWork.Products.ExistsByNameAsync(request.Name, cancellationToken))
+                throw new InvalidOperationException($"A product with the name '{request.Name}' already exists.");
+
+            product.ChangeName(request.Name);
             hasChanges = true;
         }
 
-        if (request.Description != product.Description)
+        if (request.Description != null && request.Description != product.Description)
         {
-            product.UpdateDescription(request.Description);
+            product.ChangeDescription(request.Description);
             hasChanges = true;
         }
 
-        if (request.Price != product.Price)
+        if (request.Price.HasValue && request.Price.Value != product.Price)
         {
-            product.UpdatePrice(request.Price);
+            product.ChangePrice(request.Price.Value);
             hasChanges = true;
         }
 
-        if (request.StockQuantity != product.StockQuantity)
+        if (request.StockQuantity.HasValue && request.StockQuantity.Value != product.StockQuantity)
         {
-            product.UpdateStockQuantity(request.StockQuantity);
+            product.ChangeStockQuantity(request.StockQuantity.Value);
             hasChanges = true;
         }
 
-        if (request.ImageUrl != product.ImageUrl)
+        if (request.ImageUrl != null && request.ImageUrl != product.ImageUrl)
         {
-            product.UpdateImageUrl(request.ImageUrl);
+            product.ChangeImageUrl(request.ImageUrl);
             hasChanges = true;
         }
 
