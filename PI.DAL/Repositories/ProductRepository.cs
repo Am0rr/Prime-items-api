@@ -67,7 +67,7 @@ public class ProductRepository : BaseRepository<Product>, IProductRepository
             .FirstOrDefaultAsync(p => p.Id == id, cancellationToken);
     }
 
-    public async Task<bool> ExistsByNameAsync(string name, CancellationToken cancellationToken = default)
+    public async Task<bool> ExistsByNameAsync(string name, CancellationToken cancellationToken)
     {
         return await _dbSet.AnyAsync(p => p.Name == name, cancellationToken);
     }

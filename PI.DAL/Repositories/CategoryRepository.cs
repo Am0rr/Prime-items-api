@@ -11,7 +11,7 @@ public class CategoryRepository : BaseRepository<Category>, ICategoryRepository
     {
     }
 
-    public async Task<bool> ExistsByNameAsync(string name, CancellationToken cancellationToken = default)
+    public async Task<bool> ExistsByNameAsync(string name, CancellationToken cancellationToken)
     {
         return await _dbSet.AnyAsync(c => c.Name == name, cancellationToken);
     }
