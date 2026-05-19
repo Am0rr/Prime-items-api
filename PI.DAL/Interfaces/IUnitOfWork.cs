@@ -6,6 +6,7 @@ public interface IUnitOfWork
     ICategoryRepository Categories { get; }
     IProductRepository Products { get; }
     IOrderRepository Orders { get; }
+    IRefreshTokenRepository RefreshTokens { get; }
 
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
 }
