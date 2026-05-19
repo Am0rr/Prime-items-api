@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using PI.DAL.Entities.Catalog;
 
-namespace PI.DAL.Configurations;
+namespace PI.DAL.Persistence.Configurations;
 
 public class CategoryConfiguration : IEntityTypeConfiguration<Category>
 {
