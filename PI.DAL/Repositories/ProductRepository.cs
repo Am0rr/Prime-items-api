@@ -10,9 +10,23 @@ public class ProductRepository : BaseRepository<Product>, IProductRepository
 {
     public ProductRepository(AppDbContext context) : base(context) { }
 
+    public override async Task<Product?> GetByIdAsync(Guid id, CancellationToken cancellationToken)
+    {
+        return await _dbSet
+            .Include(p => p.Category)
+            .FirstOrDefaultAsync(p => p.Id == id, cancellationToken);
+    }
+
+    public override async Task<IEnumerable<Product>> GetAllAsync(CancellationToken cancellationToken)
+    {
+        return await _dbSet
+            .Include(p => p.Category)
+            .ToListAsync(cancellationToken);
+    }
+
     public async Task<(IEnumerable<Product> Items, int TotalCount)> GetFilteredPagedAsync(ProductFilterParams filter, CancellationToken cancellationToken)
     {
-        var query = _dbSet.AsNoTracking();
+        IQueryable<Product> query = _dbSet.AsNoTracking().Include(p => p.Category);
 
         if (!string.IsNullOrWhiteSpace(filter.SearchTerm))
         {
