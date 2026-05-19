@@ -10,12 +10,14 @@ public class UnitOfWork : IUnitOfWork, IAsyncDisposable
     public ICategoryRepository Categories { get; }
     public IProductRepository Products { get; }
     public IOrderRepository Orders { get; }
+    public IRefreshTokenRepository RefreshTokens { get; }
 
     public UnitOfWork(AppDbContext context,
         IUserRepository userRepository,
         ICategoryRepository categoryRepository,
         IProductRepository productRepository,
-        IOrderRepository orderRepository)
+        IOrderRepository orderRepository,
+        IRefreshTokenRepository refreshTokenRepository)
     {
         _context = context;
 
@@ -23,6 +25,7 @@ public class UnitOfWork : IUnitOfWork, IAsyncDisposable
         Categories = categoryRepository;
         Products = productRepository;
         Orders = orderRepository;
+        RefreshTokens = refreshTokenRepository;
     }
 
     public async Task<int> SaveChangesAsync(CancellationToken cancellationToken)
