@@ -8,26 +8,42 @@ public class Order : BaseEntity
     public Guid UserId { get; private set; }
     public OrderStatus Status { get; private set; }
     public decimal TotalAmount { get; private set; }
-    public User User {get; private set; } = null!;
+    public User User { get; private set; } = null!;
     public ICollection<OrderItem> OrderItems { get; private set; } = null!;
-        
+
     protected Order()
     {
         OrderItems = new List<OrderItem>();
-    } 
-
-    private Order(Guid userId, decimal totalAmount, OrderStatus status = OrderStatus.New) : this()
-    {
-        UserId = userId;
-        TotalAmount = totalAmount;
-        Status = status;
     }
 
-    public static Order Create(Guid userId, decimal totalAmount, OrderStatus status = OrderStatus.New)
+    private Order(Guid userId, OrderStatus status = OrderStatus.New) : this()
     {
-        if (totalAmount < 0)
-            throw new ArgumentException("Total amount cannot be negative.", nameof(totalAmount));
+        UserId = userId;
+        Status = status;
+        TotalAmount = 0;
+    }
 
-        return new Order(userId, totalAmount, status);
+    public static Order Create(Guid userId)
+    {
+        return new Order(userId);
+    }
+
+    public void AddItem(Guid productId, int quantity, decimal unitPrice)
+    {
+        if (quantity <= 0)
+            throw new ArgumentException("Quantity must be greater than zero.", nameof(quantity));
+
+        if (unitPrice < 0)
+            throw new ArgumentException("Unit price cannot be negative.", nameof(unitPrice));
+
+        var item = OrderItem.Create(this.Id, productId, quantity, unitPrice);
+        OrderItems.Add(item);
+
+        TotalAmount += quantity * unitPrice;
+    }
+
+    public void ChangeStatus(OrderStatus newStatus)
+    {
+        Status = newStatus;
     }
 }
