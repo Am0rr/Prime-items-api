@@ -1,8 +1,8 @@
-using Microsoft.EntityFrameworkCore;
 using PI.DAL.Persistence;
 using PI.DAL;
 using DotNetEnv;
 using System.Text.Json.Serialization;
+using PI.PL.Infrastructure.Extensions;
 
 Env.TraversePath().Load();
 
@@ -27,7 +27,7 @@ builder.Services.AddControllers()
 builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddDataAccess(builder.Configuration);
-
+builder.Services.AddJwtAuthentication(builder.Configuration);
 
 var app = builder.Build();
 
@@ -50,6 +50,7 @@ using (var scope = app.Services.CreateScope())
     }
 }
 
+app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
 
