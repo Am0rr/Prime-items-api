@@ -5,12 +5,15 @@ using PI.DAL.Entities.Identity;
 
 namespace PI.BLL.Services;
 
-public class AuthService : IAuthService
+public class AuthService : BaseService, IAuthService
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IJwtProvider _jwtProvider;
 
-    public AuthService(IUnitOfWork unitOfWork, IJwtProvider jwtProvider)
+    public AuthService(
+        IUnitOfWork unitOfWork,
+        IJwtProvider jwtProvider,
+        IServiceProvider serviceProvider) : base(serviceProvider)
     {
         _unitOfWork = unitOfWork;
         _jwtProvider = jwtProvider;
@@ -18,6 +21,8 @@ public class AuthService : IAuthService
 
     public async Task<AuthResponse> LoginAsync(LoginRequest request, CancellationToken cancellationToken)
     {
+        await ValidateAsync(request);
+
         var user = await _unitOfWork.Users.GetByEmailAsync(request.Email, cancellationToken)
             ?? throw new UnauthorizedAccessException("Invalid email or password.");
 

@@ -1,7 +1,7 @@
 using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace TL.BLL.Services;
+namespace PI.BLL.Services;
 
 public class BaseService
 {
