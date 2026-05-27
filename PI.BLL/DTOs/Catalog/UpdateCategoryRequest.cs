@@ -2,6 +2,6 @@
 
 public record UpdateCategoryRequest(
     Guid Id,
-    string Name,
-    string Description
+    string? Name,
+    string? Description
 );
