@@ -7,12 +7,12 @@ using PI.DAL.Entities.Catalog;
 
 namespace PI.BLL.Services;
 
-public class ProductService : IProductService
+public class ProductService : BaseService, IProductService
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
 
-    public ProductService(IUnitOfWork unitOfWork, IMapper mapper)
+    public ProductService(IUnitOfWork unitOfWork, IMapper mapper, IServiceProvider serviceProvider) : base(serviceProvider)
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
@@ -20,6 +20,8 @@ public class ProductService : IProductService
 
     public async Task<Guid> CreateAsync(CreateProductRequest request, CancellationToken cancellationToken)
     {
+        await ValidateAsync(request);
+
         var category = await _unitOfWork.Categories.GetByIdAsync(request.CategoryId, cancellationToken);
         if (category == null)
             throw new KeyNotFoundException($"Category with ID {request.CategoryId} was not found.");
@@ -40,6 +42,8 @@ public class ProductService : IProductService
 
     public async Task UpdateAsync(UpdateProductRequest request, CancellationToken cancellationToken)
     {
+        await ValidateAsync(request);
+
         var product = await _unitOfWork.Products.GetByIdAsync(request.Id, cancellationToken)
             ?? throw new KeyNotFoundException($"Product with ID {request.Id} was not found.");
 

@@ -6,12 +6,12 @@ using PI.DAL.Entities.Catalog;
 
 namespace PI.BLL.Services;
 
-public class CategoryService : ICategoryService
+public class CategoryService : BaseService, ICategoryService
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
 
-    public CategoryService(IUnitOfWork unitOfWork, IMapper mapper)
+    public CategoryService(IUnitOfWork unitOfWork, IMapper mapper, IServiceProvider serviceProvider) : base(serviceProvider)
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
@@ -19,6 +19,8 @@ public class CategoryService : ICategoryService
 
     public async Task<Guid> CreateAsync(CreateCategoryRequest request, CancellationToken cancellationToken)
     {
+        await ValidateAsync(request);
+
         var category = Category.Create(request.Name, request.Description);
 
         await _unitOfWork.Categories.AddAsync(category, cancellationToken);
@@ -28,6 +30,8 @@ public class CategoryService : ICategoryService
 
     public async Task UpdateAsync(UpdateCategoryRequest request, CancellationToken cancellationToken)
     {
+        await ValidateAsync(request);
+
         var category = await _unitOfWork.Categories.GetByIdAsync(request.Id, cancellationToken)
             ?? throw new KeyNotFoundException($"Category with ID {request.Id} was not found.");
 
