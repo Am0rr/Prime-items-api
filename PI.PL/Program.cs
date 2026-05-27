@@ -3,6 +3,7 @@ using PI.DAL;
 using DotNetEnv;
 using System.Text.Json.Serialization;
 using PI.PL.Infrastructure.Extensions;
+using PI.BLL;
 
 Env.TraversePath().Load();
 
@@ -27,6 +28,7 @@ builder.Services.AddControllers()
 builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddDataAccess(builder.Configuration);
+builder.Services.AddApplication();
 builder.Services.AddJwtAuthentication(builder.Configuration);
 
 var app = builder.Build();
