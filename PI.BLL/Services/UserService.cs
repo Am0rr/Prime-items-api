@@ -7,12 +7,15 @@ using PI.DAL.Enums;
 
 namespace PI.BLL.Services;
 
-public class UserService : IUserService
+public class UserService : BaseService, IUserService
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
 
-    public UserService(IUnitOfWork unitOfWork, IMapper mapper)
+    public UserService(
+        IUnitOfWork unitOfWork,
+        IMapper mapper,
+        IServiceProvider serviceProvider) : base(serviceProvider)
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
@@ -20,6 +23,8 @@ public class UserService : IUserService
 
     public async Task<Guid> CreateAsync(CreateUserRequest request, CancellationToken cancellationToken)
     {
+        await ValidateAsync(request);
+
         if (await _unitOfWork.Users.ExistsByUsernameAsync(request.Username, cancellationToken))
             throw new InvalidOperationException("This username is already taken.");
 
@@ -43,6 +48,7 @@ public class UserService : IUserService
 
     public async Task UpdateAsync(UpdateUserRequest request, CancellationToken cancellationToken)
     {
+        await ValidateAsync(request);
         var user = await _unitOfWork.Users.GetByIdAsync(request.Id, cancellationToken)
             ?? throw new KeyNotFoundException($"User with Id {request.Id} not found");
 
