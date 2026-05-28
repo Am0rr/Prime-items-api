@@ -2,11 +2,11 @@
 using PI.BLL.DTOs.Catalog;
 using PI.BLL.Interfaces;
 using PI.DAL.Interfaces;
-using PI.DAL.Models;
 using PI.DAL.Entities.Catalog;
+using PI.DAL.Models.Catalog;
 
 namespace PI.BLL.Services;
-
+ 
 public class ProductService : BaseService, IProductService
 {
     private readonly IUnitOfWork _unitOfWork;
@@ -122,7 +122,7 @@ public class ProductService : BaseService, IProductService
         return _mapper.Map<List<ProductResponse>>(products);
     }
 
-    public async Task<(IEnumerable<ProductResponse> Items, int TotalCount)> GetPagedAsync(ProductFilterParams filter, CancellationToken cancellationToken)
+    public async Task<(IEnumerable<ProductResponse> Items, int TotalCount)> GetPagedAsync(ProductFilterModel filter, CancellationToken cancellationToken)
     {
         var (items, totalCount) = await _unitOfWork.Products.GetFilteredPagedAsync(filter, cancellationToken);
 

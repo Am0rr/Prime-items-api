@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using PI.DAL.Entities.Catalog;
 using PI.DAL.Interfaces;
-using PI.DAL.Models;
+using PI.DAL.Models.Catalog;
 using PI.DAL.Persistence;
 
 namespace PI.DAL.Repositories;
@@ -24,7 +24,7 @@ public class ProductRepository : BaseRepository<Product>, IProductRepository
             .ToListAsync(cancellationToken);
     }
 
-    public async Task<(IEnumerable<Product> Items, int TotalCount)> GetFilteredPagedAsync(ProductFilterParams filter, CancellationToken cancellationToken)
+    public async Task<(IEnumerable<Product> Items, int TotalCount)> GetFilteredPagedAsync(ProductFilterModel filter, CancellationToken cancellationToken)
     {
         IQueryable<Product> query = _dbSet.AsNoTracking().Include(p => p.Category);
 

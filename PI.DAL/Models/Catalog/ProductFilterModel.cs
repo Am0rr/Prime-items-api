@@ -1,6 +1,6 @@
-﻿namespace PI.DAL.Models;
+﻿namespace PI.DAL.Models.Catalog;
 
-public class ProductFilterParams
+public class ProductFilterModel
 {
     public string? SearchTerm { get; set; }
     public Guid? CategoryId { get; set; }
