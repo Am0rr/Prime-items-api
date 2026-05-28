@@ -24,7 +24,7 @@ public class ProductRepository : BaseRepository<Product>, IProductRepository
             .ToListAsync(cancellationToken);
     }
 
-    public async Task<(IEnumerable<Product> Items, int TotalCount)> GetFilteredPagedAsync(ProductFilterModel filter, CancellationToken cancellationToken)
+    public async Task<ProductPagedResult> GetFilteredPagedAsync(ProductFilterModel filter, CancellationToken cancellationToken)
     {
         IQueryable<Product> query = _dbSet.AsNoTracking().Include(p => p.Category);
 
@@ -70,7 +70,11 @@ public class ProductRepository : BaseRepository<Product>, IProductRepository
             .Take(filter.PageSize)
             .ToListAsync(cancellationToken);
 
-        return (items, totalCount);
+        return new ProductPagedResult
+        {
+            Items = items,
+            TotalCount = totalCount
+        };
     }
 
     public async Task<Product?> GetWithDetailsAsync(Guid id, CancellationToken cancellationToken)
