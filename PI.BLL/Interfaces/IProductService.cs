@@ -10,5 +10,5 @@ public interface IProductService
     Task DeleteAsync(Guid id, CancellationToken cancellationToken = default);
     Task<ProductResponse?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default);
     Task<List<ProductResponse>> GetAllAsync(CancellationToken cancellationToken = default);
-    Task<(IEnumerable<ProductResponse> Items, int TotalCount)> GetPagedAsync(ProductFilterModel filter, CancellationToken cancellationToken = default);
+    Task<ProductPagedResponse> GetPagedAsync(ProductFilterModel filter, CancellationToken cancellationToken = default);
 }

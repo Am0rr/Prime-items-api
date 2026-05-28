@@ -122,12 +122,12 @@ public class ProductService : BaseService, IProductService
         return _mapper.Map<List<ProductResponse>>(products);
     }
 
-    public async Task<(IEnumerable<ProductResponse> Items, int TotalCount)> GetPagedAsync(ProductFilterModel filter, CancellationToken cancellationToken)
+    public async Task<ProductPagedResponse> GetPagedAsync(ProductFilterModel filter, CancellationToken cancellationToken)
     {
-        var (items, totalCount) = await _unitOfWork.Products.GetFilteredPagedAsync(filter, cancellationToken);
+        var result = await _unitOfWork.Products.GetFilteredPagedAsync(filter, cancellationToken);
 
-        var mappedItems = _mapper.Map<IEnumerable<ProductResponse>>(items);
+        var mappedItems = _mapper.Map<IEnumerable<ProductResponse>>(result.Items);
 
-        return (mappedItems, totalCount);
+        return new ProductPagedResponse(mappedItems, result.TotalCount);
     }
 }
