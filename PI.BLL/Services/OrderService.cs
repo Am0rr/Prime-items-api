@@ -21,6 +21,9 @@ public class OrderService : IOrderService
 
     public async Task<Guid> CreateAsync(CreateOrderRequest request, Guid userId, CancellationToken cancellationToken)
     {
+        if (request.Items is null)
+            throw new ArgumentException("Order items must be provided.", nameof(request));
+
         var productsToUpdate = new List<Product>();
 
         var order = Order.Create(userId);
