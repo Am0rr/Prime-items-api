@@ -53,10 +53,10 @@ public class OrderService : IOrderService
         return order.Id;
     }
 
-    public async Task UpdateStatusAsync(UpdateOrderStatusRequest request, CancellationToken cancellationToken)
+    public async Task UpdateStatusAsync(Guid id, UpdateOrderStatusRequest request, CancellationToken cancellationToken)
     {
-        var order = await _unitOfWork.Orders.GetByIdAsync(request.Id, cancellationToken)
-            ?? throw new KeyNotFoundException($"Order with ID {request.Id} not found.");
+        var order = await _unitOfWork.Orders.GetByIdAsync(id, cancellationToken)
+            ?? throw new KeyNotFoundException($"Order with ID {id} not found.");
 
         bool hasChanges = false;
 

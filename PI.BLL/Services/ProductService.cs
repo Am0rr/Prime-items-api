@@ -43,12 +43,12 @@ public class ProductService : BaseService, IProductService
         return _mapper.Map<ProductResponse>(product);
     }
 
-    public async Task UpdateAsync(UpdateProductRequest request, CancellationToken cancellationToken)
+    public async Task UpdateAsync(Guid id, UpdateProductRequest request, CancellationToken cancellationToken)
     {
         await ValidateAsync(request);
 
-        var product = await _unitOfWork.Products.GetByIdAsync(request.Id, cancellationToken)
-            ?? throw new KeyNotFoundException($"Product with ID {request.Id} was not found.");
+        var product = await _unitOfWork.Products.GetByIdAsync(id, cancellationToken)
+            ?? throw new KeyNotFoundException($"Product with ID {id} was not found.");
 
         if (request.CategoryId.HasValue && request.CategoryId.Value != product.CategoryId)
         {

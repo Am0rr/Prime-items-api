@@ -7,9 +7,6 @@ public class UpdateProductValidator : AbstractValidator<UpdateProductRequest>
 {
     public UpdateProductValidator()
     {
-        RuleFor(p => p.Id)
-            .NotEmpty().WithMessage("Product ID is required.");
-
         RuleFor(p => p.CategoryId)
             .NotEmpty().WithMessage("Category ID cannot be empty.")
             .When(p => p.CategoryId != null);

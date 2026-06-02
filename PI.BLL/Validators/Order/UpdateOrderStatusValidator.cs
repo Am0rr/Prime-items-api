@@ -8,9 +8,6 @@ public class UpdateOrderStatusValidator : AbstractValidator<UpdateOrderStatusReq
 {
     public UpdateOrderStatusValidator()
     {
-        RuleFor(x => x.Id)
-            .NotEmpty().WithMessage("Order ID is required.");
-
         RuleFor(x => x.Status)
             .NotEmpty().WithMessage("Status cannot be empty if provided.")
             .IsEnumName(typeof(OrderStatus), caseSensitive: false)

@@ -8,8 +8,6 @@ public class UpdateUserValidator : AbstractValidator<UpdateUserRequest>
 {
     public UpdateUserValidator()
     {
-        RuleFor(u => u.Id).NotEmpty();
-
         RuleFor(u => u.Username)
             .NotEmpty().WithMessage("Username cannot be empty.")
             .MaximumLength(50).WithMessage("Username must not exceed 100 characters")

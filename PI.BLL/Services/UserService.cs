@@ -46,11 +46,11 @@ public class UserService : BaseService, IUserService
         return _mapper.Map<UserResponse>(user);
     }
 
-    public async Task UpdateAsync(UpdateUserRequest request, CancellationToken cancellationToken)
+    public async Task UpdateAsync(Guid id, UpdateUserRequest request, CancellationToken cancellationToken)
     {
         await ValidateAsync(request);
-        var user = await _unitOfWork.Users.GetByIdAsync(request.Id, cancellationToken)
-            ?? throw new KeyNotFoundException($"User with Id {request.Id} not found");
+        var user = await _unitOfWork.Users.GetByIdAsync(id, cancellationToken)
+            ?? throw new KeyNotFoundException($"User with Id {id} not found");
 
         if (request.Username != null && request.Username != user.Username)
         {

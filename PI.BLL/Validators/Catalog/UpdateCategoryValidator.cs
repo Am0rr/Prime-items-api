@@ -7,9 +7,6 @@ public class UpdateCategoryValidator : AbstractValidator<UpdateCategoryRequest>
 {
     public UpdateCategoryValidator()
     {
-        RuleFor(c => c.Id)
-            .NotEmpty().WithMessage("Category ID is required.");
-
         RuleFor(c => c.Name)
             .NotEmpty().WithMessage("Category name cannot be empty.")
             .MaximumLength(100).WithMessage("Category name must not exceed 100 characters.")
