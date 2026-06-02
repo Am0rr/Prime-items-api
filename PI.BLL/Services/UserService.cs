@@ -40,7 +40,7 @@ public class UserService : BaseService, IUserService
             UserRole.Registered
         );
 
-        await _unitOfWork.Users.AddAsync(user, cancellationToken);
+        _unitOfWork.Users.Add(user);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         return user.Id;

@@ -14,9 +14,9 @@ public class RefreshTokenRepository : IRefreshTokenRepository
         _dbSet = context.Set<RefreshToken>();
     }
 
-    public async Task AddAsync(RefreshToken refreshToken, CancellationToken cancellationToken)
+    public void Add(RefreshToken refreshToken)
     {
-        await _dbSet.AddAsync(refreshToken, cancellationToken);
+        _dbSet.Add(refreshToken);
     }
 
     public async Task<RefreshToken?> GetByTokenAsync(string token, CancellationToken cancellationToken)

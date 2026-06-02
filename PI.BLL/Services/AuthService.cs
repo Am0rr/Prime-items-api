@@ -72,7 +72,7 @@ public class AuthService : BaseService, IAuthService
             user.Id
         );
 
-        await _unitOfWork.RefreshTokens.AddAsync(refreshToken, cancellationToken);
+        _unitOfWork.RefreshTokens.Add(refreshToken);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         return new AuthResponse

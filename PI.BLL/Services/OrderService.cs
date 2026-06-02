@@ -47,7 +47,7 @@ public class OrderService : IOrderService
             _unitOfWork.Products.Update(product);
         }
 
-        await _unitOfWork.Orders.AddAsync(order, cancellationToken);
+        _unitOfWork.Orders.Add(order);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         return order.Id;

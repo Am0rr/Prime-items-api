@@ -24,10 +24,9 @@ public abstract class BaseRepository<T> : IBaseRepository<T> where T : BaseEntit
         return await _dbSet.ToListAsync(cancellationToken);
     }
 
-    public async Task<Guid> AddAsync(T item, CancellationToken cancellationToken)
+    public void Add(T item)
     {
-        await _dbSet.AddAsync(item, cancellationToken);
-        return item.Id;
+        _dbSet.Add(item);
     }
 
     public void Update(T item)
