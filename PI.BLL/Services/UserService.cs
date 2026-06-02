@@ -21,7 +21,7 @@ public class UserService : BaseService, IUserService
         _mapper = mapper;
     }
 
-    public async Task<Guid> CreateAsync(CreateUserRequest request, CancellationToken cancellationToken)
+    public async Task<UserResponse> CreateAsync(CreateUserRequest request, CancellationToken cancellationToken)
     {
         await ValidateAsync(request);
 
@@ -43,7 +43,7 @@ public class UserService : BaseService, IUserService
         _unitOfWork.Users.Add(user);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-        return user.Id;
+        return _mapper.Map<UserResponse>(user);
     }
 
     public async Task UpdateAsync(UpdateUserRequest request, CancellationToken cancellationToken)
