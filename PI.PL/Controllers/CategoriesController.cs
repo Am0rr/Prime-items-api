@@ -43,7 +43,6 @@ public class CategoriesController : ControllerBase
         return Ok(categories);
     }
 
-    [HttpPatch]
     [HttpPatch("{id:guid}")]
     public async Task<IActionResult> Update([FromRoute] Guid id, [FromBody] UpdateCategoryRequest request, CancellationToken cancellationToken)
     {
