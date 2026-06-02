@@ -7,7 +7,7 @@ public interface IUserService
     Task<UserResponse> CreateAsync(CreateUserRequest request, CancellationToken cancellationToken = default);
     Task UpdateAsync(UpdateUserRequest request, CancellationToken cancellationToken = default);
     Task DeleteAsync(Guid id, CancellationToken cancellationToken = default);
-    Task<UserResponse?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default);
-    Task<UserResponse?> GetByEmailAsync(string email, CancellationToken cancellationToken = default);
-    Task<List<UserResponse>> GetAllAsync(CancellationToken cancellationToken = default);
+    Task<UserResponse> GetByIdAsync(Guid id, CancellationToken cancellationToken = default);
+    Task<UserResponse> GetByEmailAsync(string email, CancellationToken cancellationToken = default);
+    Task<IEnumerable<UserResponse>> GetAllAsync(CancellationToken cancellationToken = default);
 }
