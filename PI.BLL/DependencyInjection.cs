@@ -21,7 +21,7 @@ public static class DependencyInjection
 
         services.AddValidatorsFromAssemblyContaining<CreateUserValidator>();
 
-        services.AddAutoMapper(Assembly.GetExecutingAssembly());
+        services.AddAutoMapper(cfg => cfg.AddMaps(Assembly.GetExecutingAssembly()));
 
         return services;
     }

@@ -23,7 +23,7 @@ public class CategoryService : BaseService, ICategoryService
 
         var category = Category.Create(request.Name, request.Description);
 
-        await _unitOfWork.Categories.AddAsync(category, cancellationToken);
+        _unitOfWork.Categories.Add(category);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
         return category.Id;
     }

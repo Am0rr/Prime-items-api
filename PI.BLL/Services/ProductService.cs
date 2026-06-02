@@ -6,7 +6,7 @@ using PI.DAL.Entities.Catalog;
 using PI.DAL.Models.Catalog;
 
 namespace PI.BLL.Services;
- 
+
 public class ProductService : BaseService, IProductService
 {
     private readonly IUnitOfWork _unitOfWork;
@@ -34,7 +34,7 @@ public class ProductService : BaseService, IProductService
             request.StockQuantity,
             request.ImageUrl);
 
-        await _unitOfWork.Products.AddAsync(product, cancellationToken);
+        _unitOfWork.Products.Add(product);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         return product.Id;
