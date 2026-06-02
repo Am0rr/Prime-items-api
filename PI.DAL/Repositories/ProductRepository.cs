@@ -77,14 +77,6 @@ public class ProductRepository : BaseRepository<Product>, IProductRepository
         };
     }
 
-    public async Task<Product?> GetWithDetailsAsync(Guid id, CancellationToken cancellationToken)
-    {
-        return await _dbSet
-            .AsNoTracking()
-            .Include(p => p.Category)
-            .FirstOrDefaultAsync(p => p.Id == id, cancellationToken);
-    }
-
     public async Task<bool> ExistsByNameAsync(string name, CancellationToken cancellationToken)
     {
         return await _dbSet.AnyAsync(p => p.Name == name, cancellationToken);

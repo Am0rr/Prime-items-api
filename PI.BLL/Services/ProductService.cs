@@ -109,7 +109,7 @@ public class ProductService : BaseService, IProductService
 
     public async Task<ProductResponse?> GetByIdAsync(Guid id, CancellationToken cancellationToken)
     {
-        var product = await _unitOfWork.Products.GetWithDetailsAsync(id, cancellationToken);
+        var product = await _unitOfWork.Products.GetByIdAsync(id, cancellationToken);
         if (product == null)
             throw new KeyNotFoundException($"Product with ID {id} was not found.");
 
