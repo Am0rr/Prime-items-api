@@ -11,13 +11,17 @@ public class CategoryService : BaseService, ICategoryService
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
 
-    public CategoryService(IUnitOfWork unitOfWork, IMapper mapper, IServiceProvider serviceProvider) : base(serviceProvider)
+    public CategoryService(
+        IUnitOfWork unitOfWork,
+        IMapper mapper,
+        IServiceProvider serviceProvider)
+        : base(serviceProvider)
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
     }
 
-    public async Task<Guid> CreateAsync(CreateCategoryRequest request, CancellationToken cancellationToken)
+    public async Task<CategoryResponse> CreateAsync(CreateCategoryRequest request, CancellationToken cancellationToken)
     {
         await ValidateAsync(request);
 
@@ -25,7 +29,8 @@ public class CategoryService : BaseService, ICategoryService
 
         _unitOfWork.Categories.Add(category);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
-        return category.Id;
+
+        return _mapper.Map<CategoryResponse>(category);
     }
 
     public async Task UpdateAsync(UpdateCategoryRequest request, CancellationToken cancellationToken)
@@ -35,26 +40,19 @@ public class CategoryService : BaseService, ICategoryService
         var category = await _unitOfWork.Categories.GetByIdAsync(request.Id, cancellationToken)
             ?? throw new KeyNotFoundException($"Category with ID {request.Id} was not found.");
 
-        bool hasChanges = false;
-
         if (request.Name != null && request.Name != category.Name)
         {
             if (await _unitOfWork.Categories.ExistsByNameAsync(request.Name, cancellationToken))
                 throw new InvalidOperationException($"A category with the name '{request.Name}' already exists.");
 
             category.ChangeName(request.Name);
-            hasChanges = true;
         }
 
         if (request.Description != null && request.Description != category.Description)
         {
             category.ChangeDescription(request.Description);
-            hasChanges = true;
         }
 
-        if (!hasChanges) return;
-
-        _unitOfWork.Categories.Update(category);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
     }
 
@@ -67,7 +65,7 @@ public class CategoryService : BaseService, ICategoryService
         await _unitOfWork.SaveChangesAsync(cancellationToken);
     }
 
-    public async Task<CategoryResponse?> GetByIdAsync(Guid id, CancellationToken cancellationToken)
+    public async Task<CategoryResponse> GetByIdAsync(Guid id, CancellationToken cancellationToken)
     {
         var category = await _unitOfWork.Categories.GetByIdAsync(id, cancellationToken)
             ?? throw new KeyNotFoundException($"Category with ID {id} was not found.");
@@ -75,9 +73,10 @@ public class CategoryService : BaseService, ICategoryService
         return _mapper.Map<CategoryResponse>(category);
     }
 
-    public async Task<List<CategoryResponse>> GetAllAsync(CancellationToken cancellationToken)
+    public async Task<IEnumerable<CategoryResponse>> GetAllAsync(CancellationToken cancellationToken)
     {
         var categories = await _unitOfWork.Categories.GetAllAsync(cancellationToken);
-        return _mapper.Map<List<CategoryResponse>>(categories);
+
+        return _mapper.Map<IEnumerable<CategoryResponse>>(categories);
     }
 }
