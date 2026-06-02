@@ -52,14 +52,11 @@ public class UserService : BaseService, IUserService
         var user = await _unitOfWork.Users.GetByIdAsync(request.Id, cancellationToken)
             ?? throw new KeyNotFoundException($"User with Id {request.Id} not found");
 
-        bool hasChanges = false;
-
         if (request.Username != null && request.Username != user.Username)
         {
             if (await _unitOfWork.Users.ExistsByUsernameAsync(request.Username, cancellationToken))
                 throw new InvalidOperationException("This username is already taken.");
 
-            hasChanges = true;
             user.ChangeUsername(request.Username);
         }
 
@@ -68,7 +65,6 @@ public class UserService : BaseService, IUserService
             if (await _unitOfWork.Users.ExistsByEmailAsync(request.Email, cancellationToken))
                 throw new InvalidOperationException("Account with this email address already exists.");
 
-            hasChanges = true;
             user.ChangeEmail(request.Email);
         }
 
@@ -79,13 +75,9 @@ public class UserService : BaseService, IUserService
             if (role != user.Role)
             {
                 user.ChangeRole(role);
-                hasChanges = true;
             }
         }
 
-        if (!hasChanges) return;
-
-        _unitOfWork.Users.Update(user);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
     }
 
@@ -98,24 +90,26 @@ public class UserService : BaseService, IUserService
         await _unitOfWork.SaveChangesAsync(cancellationToken);
     }
 
-    public async Task<UserResponse?> GetByIdAsync(Guid id, CancellationToken cancellationToken)
+    public async Task<UserResponse> GetByIdAsync(Guid id, CancellationToken cancellationToken)
     {
-        var user = await _unitOfWork.Users.GetByIdAsync(id, cancellationToken);
+        var user = await _unitOfWork.Users.GetByIdAsync(id, cancellationToken)
+            ?? throw new KeyNotFoundException($"User with ID {id} not found.");
 
         return _mapper.Map<UserResponse>(user);
     }
 
-    public async Task<UserResponse?> GetByEmailAsync(string email, CancellationToken cancellationToken)
+    public async Task<UserResponse> GetByEmailAsync(string email, CancellationToken cancellationToken)
     {
-        var user = await _unitOfWork.Users.GetByEmailAsync(email, cancellationToken);
+        var user = await _unitOfWork.Users.GetByEmailAsync(email, cancellationToken)
+            ?? throw new KeyNotFoundException($"User with email {email} not found.");
 
         return _mapper.Map<UserResponse>(user);
     }
 
-    public async Task<List<UserResponse>> GetAllAsync(CancellationToken cancellationToken)
+    public async Task<IEnumerable<UserResponse>> GetAllAsync(CancellationToken cancellationToken)
     {
         var users = await _unitOfWork.Users.GetAllAsync(cancellationToken);
 
-        return _mapper.Map<List<UserResponse>>(users);
+        return _mapper.Map<IEnumerable<UserResponse>>(users);
     }
 }
