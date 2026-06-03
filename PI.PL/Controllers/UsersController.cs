@@ -2,12 +2,13 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PI.BLL.DTOs.Identity;
 using PI.BLL.Interfaces;
+using PI.DAL.Enums;
 
 namespace PI.PL.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-[Authorize(Roles = "Admin")]
+[Authorize(Roles = nameof(UserRole.Admin))]
 public class UsersController : ControllerBase
 {
     private readonly IUserService _userService;
