@@ -20,6 +20,7 @@ public class ProductRepository : BaseRepository<Product>, IProductRepository
     public override async Task<IEnumerable<Product>> GetAllAsync(CancellationToken cancellationToken)
     {
         return await _dbSet
+            .AsNoTracking()
             .Include(p => p.Category)
             .ToListAsync(cancellationToken);
     }
