@@ -21,7 +21,7 @@ public abstract class BaseRepository<T> : IBaseRepository<T> where T : BaseEntit
 
     public virtual async Task<IEnumerable<T>> GetAllAsync(CancellationToken cancellationToken)
     {
-        return await _dbSet.ToListAsync(cancellationToken);
+        return await _dbSet.AsNoTracking().ToListAsync(cancellationToken);
     }
 
     public void Add(T item)

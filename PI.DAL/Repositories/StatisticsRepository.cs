@@ -34,11 +34,11 @@ public class StatisticsRepository : IStatisticsRepository
     {
         return await _context.OrderItems
             .AsNoTracking()
-            .GroupBy(oi => oi.ProductId)
+            .GroupBy(oi => new { oi.ProductId, oi.Product.Name })
             .Select(g => new TopProductModel
             {
-                ProductId = g.Key,
-                Name = g.First().Product.Name,
+                ProductId = g.Key.ProductId,
+                Name = g.Key.Name,
                 TotalItemsSold = g.Sum(oi => oi.Quantity),
                 TotalRevenue = g.Sum(oi => oi.Quantity * oi.UnitPrice)
             })
@@ -80,11 +80,11 @@ public class StatisticsRepository : IStatisticsRepository
     {
         return await _context.Orders
             .AsNoTracking()
-            .GroupBy(o => o.UserId)
+            .GroupBy(o => new { o.UserId, o.User.Email })
             .Select(g => new TopUserModel
             {
-                UserId = g.Key,
-                Email = g.First().User.Email,
+                UserId = g.Key.UserId,
+                Email = g.Key.Email,
                 TotalSpent = g.Sum(o => o.TotalAmount),
                 TotalOrders = g.Count()
             })
