@@ -20,15 +20,15 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("register")]
-    public async Task<ActionResult<UserResponse>> RegisterAsync([FromBody] CreateUserRequest request, CancellationToken cancellationToken)
+    public async Task<ActionResult<UserResponse>> Register([FromBody] CreateUserRequest request, CancellationToken cancellationToken)
     {
         var user = await _userService.CreateAsync(request, cancellationToken);
 
-        return CreatedAtAction(nameof(RegisterAsync), new { id = user.Id }, user);
+        return CreatedAtAction(nameof(Register), new { id = user.Id }, user);
     }
 
     [HttpPost("login")]
-    public async Task<ActionResult<AuthResponse>> LoginAsync([FromBody] LoginRequest request, CancellationToken cancellationToken)
+    public async Task<ActionResult<AuthResponse>> Login([FromBody] LoginRequest request, CancellationToken cancellationToken)
     {
         var user = await _authService.LoginAsync(request, cancellationToken);
 
@@ -36,7 +36,7 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("refresh")]
-    public async Task<ActionResult<AuthResponse>> RefreshAsync([FromBody] string refreshToken, CancellationToken cancellationToken)
+    public async Task<ActionResult<AuthResponse>> Refresh([FromBody] string refreshToken, CancellationToken cancellationToken)
     {
         var token = await _authService.RefreshAsync(refreshToken, cancellationToken);
 
@@ -44,7 +44,7 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("revoke")]
-    public async Task<IActionResult> RevokeAsync([FromBody] string refreshToken, CancellationToken cancellationToken)
+    public async Task<IActionResult> Revoke([FromBody] string refreshToken, CancellationToken cancellationToken)
     {
         await _authService.RevokeAsync(refreshToken, cancellationToken);
 

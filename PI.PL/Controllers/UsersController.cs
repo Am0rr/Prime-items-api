@@ -19,35 +19,35 @@ public class UsersController : ControllerBase
     }
 
     [HttpGet("{id:guid}")]
-    public async Task<ActionResult<UserResponse>> GetByIdAsync(Guid id, CancellationToken cancellationToken)
+    public async Task<ActionResult<UserResponse>> GetById(Guid id, CancellationToken cancellationToken)
     {
         var user = await _userService.GetByIdAsync(id, cancellationToken);
         return Ok(user);
     }
 
     [HttpGet("email")]
-    public async Task<ActionResult<UserResponse>> GetByEmailAsync([FromQuery] string email, CancellationToken cancellationToken)
+    public async Task<ActionResult<UserResponse>> GetByEmail([FromQuery] string email, CancellationToken cancellationToken)
     {
         var user = await _userService.GetByEmailAsync(email, cancellationToken);
         return Ok(user);
     }
 
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<UserResponse>>> GetAllAsync(CancellationToken cancellationToken)
+    public async Task<ActionResult<IEnumerable<UserResponse>>> GetAll(CancellationToken cancellationToken)
     {
         var users = await _userService.GetAllAsync(cancellationToken);
         return Ok(users);
     }
 
     [HttpPatch("{id:guid}")]
-    public async Task<IActionResult> UpdateAsync(Guid id, [FromBody] UpdateUserRequest request, CancellationToken cancellationToken)
+    public async Task<IActionResult> Update(Guid id, [FromBody] UpdateUserRequest request, CancellationToken cancellationToken)
     {
         await _userService.UpdateAsync(id, request, cancellationToken);
         return NoContent();
     }
 
     [HttpDelete("{id:guid}")]
-    public async Task<IActionResult> DeleteAsync(Guid id, CancellationToken cancellationToken)
+    public async Task<IActionResult> Delete(Guid id, CancellationToken cancellationToken)
     {
         await _userService.DeleteAsync(id, cancellationToken);
         return NoContent();

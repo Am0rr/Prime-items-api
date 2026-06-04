@@ -21,18 +21,18 @@ public class OrdersController : ControllerBase
 
     [HttpPost]
     [Authorize(Roles = nameof(UserRole.Registered))]
-    public async Task<ActionResult<OrderResponse>> CreateAsync([FromBody] CreateOrderRequest request, CancellationToken cancellationToken)
+    public async Task<ActionResult<OrderResponse>> Create([FromBody] CreateOrderRequest request, CancellationToken cancellationToken)
     {
         var userId = Guid.Parse(User.FindFirstValue(JwtRegisteredClaimNames.Sub)!);
 
         var response = await _orderService.CreateAsync(request, userId, cancellationToken);
 
-        return CreatedAtAction(nameof(GetByIdAsync), new { id = response.Id }, response);
+        return CreatedAtAction(nameof(GetById), new { id = response.Id }, response);
     }
 
     [HttpGet("{id:guid}")]
     [Authorize(Roles = $"{nameof(UserRole.Admin)},{nameof(UserRole.Manager)},{nameof(UserRole.Registered)}")]
-    public async Task<ActionResult<OrderResponse>> GetByIdAsync(Guid id, CancellationToken cancellationToken)
+    public async Task<ActionResult<OrderResponse>> GetById(Guid id, CancellationToken cancellationToken)
     {
         var currentUserId = Guid.Parse(User.FindFirstValue(JwtRegisteredClaimNames.Sub)!);
         var role = User.FindFirstValue(ClaimTypes.Role)!;
@@ -44,7 +44,7 @@ public class OrdersController : ControllerBase
 
     [HttpGet]
     [Authorize(Roles = $"{nameof(UserRole.Admin)},{nameof(UserRole.Manager)}")]
-    public async Task<ActionResult<IEnumerable<OrderResponse>>> GetAllAsync(CancellationToken cancellationToken)
+    public async Task<ActionResult<IEnumerable<OrderResponse>>> GetAll(CancellationToken cancellationToken)
     {
         var response = await _orderService.GetAllAsync(cancellationToken);
 
@@ -53,7 +53,7 @@ public class OrdersController : ControllerBase
 
     [HttpGet("user/{userId:guid}")]
     [Authorize(Roles = $"{nameof(UserRole.Admin)},{nameof(UserRole.Manager)},{nameof(UserRole.Registered)}")]
-    public async Task<ActionResult<IEnumerable<OrderResponse>>> GetUserOrdersAsync(Guid userId, CancellationToken cancellationToken)
+    public async Task<ActionResult<IEnumerable<OrderResponse>>> GetUserOrders(Guid userId, CancellationToken cancellationToken)
     {
         var currentUserId = Guid.Parse(User.FindFirstValue(JwtRegisteredClaimNames.Sub)!);
         var role = User.FindFirstValue(ClaimTypes.Role)!;
@@ -65,7 +65,7 @@ public class OrdersController : ControllerBase
 
     [HttpPatch("{id:guid}")]
     [Authorize(Roles = $"{nameof(UserRole.Admin)},{nameof(UserRole.Manager)}")]
-    public async Task<IActionResult> UpdateStatusAsync(Guid id, [FromBody] UpdateOrderStatusRequest request, CancellationToken cancellationToken)
+    public async Task<IActionResult> UpdateStatus(Guid id, [FromBody] UpdateOrderStatusRequest request, CancellationToken cancellationToken)
     {
         await _orderService.UpdateStatusAsync(id, request, cancellationToken);
 
@@ -74,7 +74,7 @@ public class OrdersController : ControllerBase
 
     [HttpDelete("{id:guid}")]
     [Authorize(Roles = nameof(UserRole.Admin))]
-    public async Task<IActionResult> DeleteAsync(Guid id, CancellationToken cancellationToken)
+    public async Task<IActionResult> Delete(Guid id, CancellationToken cancellationToken)
     {
         await _orderService.DeleteAsync(id, cancellationToken);
 
