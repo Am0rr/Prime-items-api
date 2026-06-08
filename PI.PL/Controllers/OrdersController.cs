@@ -23,7 +23,7 @@ public class OrdersController : ControllerBase
     [Authorize(Roles = nameof(UserRole.Registered))]
     public async Task<ActionResult<OrderResponse>> Create([FromBody] CreateOrderRequest request, CancellationToken cancellationToken)
     {
-        var userId = Guid.Parse(User.FindFirstValue(JwtRegisteredClaimNames.Sub)!);
+        var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
 
         var response = await _orderService.CreateAsync(request, userId, cancellationToken);
 
@@ -34,7 +34,7 @@ public class OrdersController : ControllerBase
     [Authorize(Roles = $"{nameof(UserRole.Admin)},{nameof(UserRole.Manager)},{nameof(UserRole.Registered)}")]
     public async Task<ActionResult<OrderResponse>> GetById(Guid id, CancellationToken cancellationToken)
     {
-        var currentUserId = Guid.Parse(User.FindFirstValue(JwtRegisteredClaimNames.Sub)!);
+        var currentUserId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
         var role = User.FindFirstValue(ClaimTypes.Role)!;
 
         var response = await _orderService.GetByIdAsync(id, currentUserId, role, cancellationToken);
@@ -55,7 +55,7 @@ public class OrdersController : ControllerBase
     [Authorize(Roles = $"{nameof(UserRole.Admin)},{nameof(UserRole.Manager)},{nameof(UserRole.Registered)}")]
     public async Task<ActionResult<IEnumerable<OrderResponse>>> GetUserOrders(Guid userId, CancellationToken cancellationToken)
     {
-        var currentUserId = Guid.Parse(User.FindFirstValue(JwtRegisteredClaimNames.Sub)!);
+        var currentUserId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
         var role = User.FindFirstValue(ClaimTypes.Role)!;
 
         var response = await _orderService.GetUserOrdersAsync(userId, currentUserId, role, cancellationToken);
