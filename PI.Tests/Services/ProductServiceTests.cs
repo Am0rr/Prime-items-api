@@ -57,7 +57,7 @@ public class ProductServiceTests
         Assert.NotNull(result);
         Assert.Equal(expectedResponse.Name, result.Name);
 
-        _categoryRepositoryMock.Verify(r => r.ExistsByNameAsync(request.Name, It.IsAny<CancellationToken>()), Times.Once);
+        _productRepositoryMock.Verify(r => r.ExistsByNameAsync(request.Name, It.IsAny<CancellationToken>()), Times.Once);
         _productRepositoryMock.Verify(r => r.Add(It.Is<Product>(p => p.Name == request.Name && p.CategoryId == request.CategoryId)), Times.Once);
         _unitOfWorkMock.Verify(u => u.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
     }

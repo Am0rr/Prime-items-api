@@ -29,6 +29,9 @@ public class ProductService : BaseService, IProductService
         var category = await _unitOfWork.Categories.GetByIdAsync(request.CategoryId, cancellationToken)
             ?? throw new KeyNotFoundException($"Category with ID {request.CategoryId} was not found.");
 
+        if (await _unitOfWork.Products.ExistsByNameAsync(request.Name, cancellationToken))
+            throw new InvalidOperationException($"A product with the name '{request.Name}' already exists.");
+
         var product = Product.Create(
             request.CategoryId,
             request.Name,
