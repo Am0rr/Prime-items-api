@@ -51,6 +51,7 @@ public class CategoryServiceTests
         Assert.NotNull(result);
         Assert.Equal(expectedResponse.Name, result.Name);
 
+        _categoryRepositoryMock.Verify(r => r.ExistsByNameAsync(request.Name, It.IsAny<CancellationToken>()), Times.Once);
         _categoryRepositoryMock.Verify(r => r.Add(It.Is<Category>(c => c.Name == request.Name && c.Description == request.Description)), Times.Once);
         _unitOfWorkMock.Verify(u => u.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
     }
