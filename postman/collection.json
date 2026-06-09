@@ -11,7 +11,7 @@
       "name": "Users",
       "item": [
         {
-          "name": "Get All Users",
+          "name": "Update User",
           "request": {
             "auth": {
               "type": "bearer",
@@ -23,22 +23,60 @@
                 }
               ]
             },
-            "method": "GET",
+            "method": "PATCH",
             "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"role\": \"Manager\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
             "url": {
-              "raw": "{{baseUrl}}/users",
+              "raw": "{{baseUrl}}/users/6a16f879-dde3-4113-ae69-be8bfe37d58b",
               "host": [
                 "{{baseUrl}}"
               ],
               "path": [
-                "users"
+                "users",
+                "6a16f879-dde3-4113-ae69-be8bfe37d58b"
               ]
             }
           },
           "response": []
         },
         {
-          "name": "Get User by ID",
+          "name": "Delete User",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{AdminToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/users/e82b06c6-7c2d-41e9-9b30-3492e4ab7e22",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "users",
+                "e82b06c6-7c2d-41e9-9b30-3492e4ab7e22"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get User by Id",
           "request": {
             "auth": {
               "type": "bearer",
@@ -112,7 +150,7 @@
           "response": []
         },
         {
-          "name": "Update User",
+          "name": "Get All Users",
           "request": {
             "auth": {
               "type": "bearer",
@@ -124,53 +162,15 @@
                 }
               ]
             },
-            "method": "PATCH",
+            "method": "GET",
             "header": [],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n    \"email\": \"dwdwd@gmail.com\"\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
             "url": {
-              "raw": "{{baseUrl}}/users/3b23cecd-85a9-4828-a0f0-d02d0b036ad8",
+              "raw": "{{baseUrl}}/users",
               "host": [
                 "{{baseUrl}}"
               ],
               "path": [
-                "users",
-                "3b23cecd-85a9-4828-a0f0-d02d0b036ad8"
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Delete User",
-          "request": {
-            "auth": {
-              "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "{{AdminToken}}",
-                  "type": "string"
-                }
-              ]
-            },
-            "method": "DELETE",
-            "header": [],
-            "url": {
-              "raw": "{{baseUrl}}/users/3b23cecd-85a9-4828-a0f0-d02d0b036ad8",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "users",
-                "3b23cecd-85a9-4828-a0f0-d02d0b036ad8"
+                "users"
               ]
             }
           },
@@ -188,7 +188,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"username\": \"Tipochek\",\n    \"email\": \"markermak@gmail.com\",\n    \"password\": \"38592122\"\n}",
+              "raw": "{\n    \"username\": \"Adam1209\",\n    \"email\": \"rosenblatt89@gmail.com\",\n    \"password\": \"90128989\"\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -242,7 +242,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "\"1gKCMkxDu24PR4yBciAPz3Jg1FiWx7PAs6o1l8PiUWl7xzgJRofWLPf+BWmAX91nYlFkZr+vsvAA5f0pRUXC1Q==\"",
+              "raw": "\"KdMoY5tcUx/BSzuy8DJfFqh+biwJOeJUNPUm+m2ojc5zx5TvqDf8N1ENSj+UCpYAJcHPnG627/I8XlG/5/j3AA==\"",
               "options": {
                 "raw": {
                   "language": "json"
@@ -309,6 +309,15 @@
             },
             "method": "POST",
             "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Gadgets\",\n    \"description\": \"Modern electronic accessories, wireless headphones, and portable speakers.\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
             "url": {
               "raw": "{{baseUrl}}/categories",
               "host": [
@@ -336,13 +345,23 @@
             },
             "method": "PATCH",
             "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"ya dayn\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
             "url": {
-              "raw": "{{baseUrl}}/categories",
+              "raw": "{{baseUrl}}/categories/97e9cb3b-4840-4898-aa79-4673d20bf85b",
               "host": [
                 "{{baseUrl}}"
               ],
               "path": [
-                "categories"
+                "categories",
+                "97e9cb3b-4840-4898-aa79-4673d20bf85b"
               ]
             }
           },
@@ -356,7 +375,7 @@
               "bearer": [
                 {
                   "key": "token",
-                  "value": "{{AdminToken}}",
+                  "value": "{{ManagerToken}}",
                   "type": "string"
                 }
               ]
@@ -373,12 +392,13 @@
               }
             },
             "url": {
-              "raw": "{{baseUrl}}/categories",
+              "raw": "{{baseUrl}}/categories/4a2b8c2e-8b49-4b06-9a36-ffb5a9661020",
               "host": [
                 "{{baseUrl}}"
               ],
               "path": [
-                "categories"
+                "categories",
+                "4a2b8c2e-8b49-4b06-9a36-ffb5a9661020"
               ]
             }
           },
@@ -395,7 +415,7 @@
               "bearer": [
                 {
                   "key": "token",
-                  "value": "{{AdminToken}}",
+                  "value": "{{RegisterdToken}}",
                   "type": "string"
                 }
               ]
@@ -404,7 +424,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"role\": \"Registered\"\n}",
+              "raw": "",
               "options": {
                 "raw": {
                   "language": "json"
@@ -412,13 +432,13 @@
               }
             },
             "url": {
-              "raw": "{{baseUrl}}/categories/",
+              "raw": "{{baseUrl}}/categories/97e9cb3b-4840-4898-aa79-4673d20bf85b",
               "host": [
                 "{{baseUrl}}"
               ],
               "path": [
                 "categories",
-                ""
+                "97e9cb3b-4840-4898-aa79-4673d20bf85b"
               ]
             }
           },
@@ -431,20 +451,13 @@
           },
           "request": {
             "auth": {
-              "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "{{AdminToken}}",
-                  "type": "string"
-                }
-              ]
+              "type": "noauth"
             },
             "method": "GET",
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"role\": \"Registered\"\n}",
+              "raw": "",
               "options": {
                 "raw": {
                   "language": "json"
@@ -484,6 +497,15 @@
             },
             "method": "POST",
             "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"categoryId\": \"897173ef-dbd3-494e-9eed-79a332c9555c\",\n    \"name\": \"Smart LED Desk Lamp with USB Port\",\n    \"description\": \"Dimmable eye-caring desk light with 5 color temperatures, auto-off timer, touch controls, and an integrated USB port for device charging.\",\n    \"price\": \"24.99\",\n    \"stockQuantity\": \"190\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
             "url": {
               "raw": "{{baseUrl}}/products",
               "host": [
@@ -511,13 +533,23 @@
             },
             "method": "PATCH",
             "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Oversized Fleece Hoodie\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
             "url": {
-              "raw": "{{baseUrl}}/products",
+              "raw": "{{baseUrl}}/products/d6c31b84-7f0a-418f-adfa-341272a5f0fe",
               "host": [
                 "{{baseUrl}}"
               ],
               "path": [
-                "products"
+                "products",
+                "d6c31b84-7f0a-418f-adfa-341272a5f0fe"
               ]
             }
           },
@@ -531,7 +563,7 @@
               "bearer": [
                 {
                   "key": "token",
-                  "value": "{{AdminToken}}",
+                  "value": "{{ManagerToken}}",
                   "type": "string"
                 }
               ]
@@ -548,12 +580,13 @@
               }
             },
             "url": {
-              "raw": "{{baseUrl}}/products",
+              "raw": "{{baseUrl}}/products/9917b937-4f8f-416c-834e-a15d6a6b046b",
               "host": [
                 "{{baseUrl}}"
               ],
               "path": [
-                "products"
+                "products",
+                "9917b937-4f8f-416c-834e-a15d6a6b046b"
               ]
             }
           },
@@ -566,20 +599,13 @@
           },
           "request": {
             "auth": {
-              "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "{{AdminToken}}",
-                  "type": "string"
-                }
-              ]
+              "type": "noauth"
             },
             "method": "GET",
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"role\": \"Registered\"\n}",
+              "raw": "",
               "options": {
                 "raw": {
                   "language": "json"
@@ -587,13 +613,13 @@
               }
             },
             "url": {
-              "raw": "{{baseUrl}}/products/",
+              "raw": "{{baseUrl}}/products/d6c31b84-7f0a-418f-adfa-341272a5f0fe",
               "host": [
                 "{{baseUrl}}"
               ],
               "path": [
                 "products",
-                ""
+                "d6c31b84-7f0a-418f-adfa-341272a5f0fe"
               ]
             }
           },
@@ -606,20 +632,13 @@
           },
           "request": {
             "auth": {
-              "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "{{AdminToken}}",
-                  "type": "string"
-                }
-              ]
+              "type": "noauth"
             },
             "method": "GET",
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"role\": \"Registered\"\n}",
+              "raw": "",
               "options": {
                 "raw": {
                   "language": "json"
@@ -640,20 +659,13 @@
           "response": []
         },
         {
-          "name": "Get Paged Products",
+          "name": "Get Filtered by Category",
           "protocolProfileBehavior": {
             "disableBodyPruning": true
           },
           "request": {
             "auth": {
-              "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "{{AdminToken}}",
-                  "type": "string"
-                }
-              ]
+              "type": "noauth"
             },
             "method": "GET",
             "header": [],
@@ -667,7 +679,7 @@
               }
             },
             "url": {
-              "raw": "{{baseUrl}}/products/paged?",
+              "raw": "{{baseUrl}}/products/paged?categoryId=897173ef-dbd3-494e-9eed-79a332c9555c",
               "host": [
                 "{{baseUrl}}"
               ],
@@ -677,8 +689,102 @@
               ],
               "query": [
                 {
-                  "key": "",
-                  "value": null
+                  "key": "categoryId",
+                  "value": "897173ef-dbd3-494e-9eed-79a332c9555c"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Filtered by Page and Size",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"role\": \"Registered\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/products/paged?pageNumber=2&pageSize=5",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "products",
+                "paged"
+              ],
+              "query": [
+                {
+                  "key": "pageNumber",
+                  "value": "2"
+                },
+                {
+                  "key": "pageSize",
+                  "value": "5"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Complex Filtering",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"role\": \"Registered\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/products/paged?searchTerm=Hoodie&minPrice=44&maxPrice=500&sortBy=price_desc",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "products",
+                "paged"
+              ],
+              "query": [
+                {
+                  "key": "searchTerm",
+                  "value": "Hoodie"
+                },
+                {
+                  "key": "minPrice",
+                  "value": "44"
+                },
+                {
+                  "key": "maxPrice",
+                  "value": "500"
+                },
+                {
+                  "key": "sortBy",
+                  "value": "price_desc"
                 }
               ]
             }
@@ -698,13 +804,22 @@
               "bearer": [
                 {
                   "key": "token",
-                  "value": "{{ManagerToken}}",
+                  "value": "{{RegisterdToken}}",
                   "type": "string"
                 }
               ]
             },
             "method": "POST",
             "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"items\": [\n        {\n            \"productId\": \"d6c31b84-7f0a-418f-adfa-341272a5f0fe\",\n            \"quantity\": 8\n        },\n        {\n            \"productId\": \"7649b771-ced8-4a1d-aeac-f90a450952ac\",\n            \"quantity\": 5\n        }\n    ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
             "url": {
               "raw": "{{baseUrl}}/orders",
               "host": [
@@ -732,13 +847,23 @@
             },
             "method": "PATCH",
             "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"status\": \"Delivered\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
             "url": {
-              "raw": "{{baseUrl}}/orders",
+              "raw": "{{baseUrl}}/orders/95ca59c6-a7b3-4511-b1c1-0b95c28d873e",
               "host": [
                 "{{baseUrl}}"
               ],
               "path": [
-                "orders"
+                "orders",
+                "95ca59c6-a7b3-4511-b1c1-0b95c28d873e"
               ]
             }
           },
@@ -769,12 +894,13 @@
               }
             },
             "url": {
-              "raw": "{{baseUrl}}/orders",
+              "raw": "{{baseUrl}}/orders/a86f7ede-e09c-44aa-ba52-fe58cdb864aa",
               "host": [
                 "{{baseUrl}}"
               ],
               "path": [
-                "orders"
+                "orders",
+                "a86f7ede-e09c-44aa-ba52-fe58cdb864aa"
               ]
             }
           },
@@ -782,6 +908,46 @@
         },
         {
           "name": "Get Order by Id",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{ManagerToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"role\": \"Registered\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/orders/95ca59c6-a7b3-4511-b1c1-0b95c28d873e",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "orders",
+                "95ca59c6-a7b3-4511-b1c1-0b95c28d873e"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get User Orders",
           "protocolProfileBehavior": {
             "disableBodyPruning": true
           },
@@ -808,13 +974,14 @@
               }
             },
             "url": {
-              "raw": "{{baseUrl}}/orders/",
+              "raw": "{{baseUrl}}/orders/user/01094fdf-97e9-4008-852c-10ae44fc3800",
               "host": [
                 "{{baseUrl}}"
               ],
               "path": [
                 "orders",
-                ""
+                "user",
+                "01094fdf-97e9-4008-852c-10ae44fc3800"
               ]
             }
           },
@@ -831,7 +998,7 @@
               "bearer": [
                 {
                   "key": "token",
-                  "value": "{{AdminToken}}",
+                  "value": "{{ManagerToken}}",
                   "type": "string"
                 }
               ]
@@ -881,7 +1048,7 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{baseUrl}}/statistics/summary?",
+              "raw": "{{baseUrl}}/statistics/summary?startDate=2026-01-01&endDate=2026-06-30",
               "host": [
                 "{{baseUrl}}"
               ],
@@ -891,8 +1058,12 @@
               ],
               "query": [
                 {
-                  "key": "",
-                  "value": null
+                  "key": "startDate",
+                  "value": "2026-01-01"
+                },
+                {
+                  "key": "endDate",
+                  "value": "2026-06-30"
                 }
               ]
             }
@@ -915,13 +1086,13 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{baseUrl}}/statistics/",
+              "raw": "{{baseUrl}}/statistics/revenue-by-category",
               "host": [
                 "{{baseUrl}}"
               ],
               "path": [
                 "statistics",
-                ""
+                "revenue-by-category"
               ]
             }
           },
@@ -983,18 +1154,18 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{baseUrl}}/statstics/low-stock?",
+              "raw": "{{baseUrl}}/statistics/low-stock?threshold=5",
               "host": [
                 "{{baseUrl}}"
               ],
               "path": [
-                "statstics",
+                "statistics",
                 "low-stock"
               ],
               "query": [
                 {
-                  "key": "",
-                  "value": null
+                  "key": "threshold",
+                  "value": "5"
                 }
               ]
             }
@@ -1017,19 +1188,13 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{baseUrl}}/statistics/top-users?",
+              "raw": "{{baseUrl}}/statistics/top-users",
               "host": [
                 "{{baseUrl}}"
               ],
               "path": [
                 "statistics",
                 "top-users"
-              ],
-              "query": [
-                {
-                  "key": "",
-                  "value": null
-                }
               ]
             }
           },
@@ -1073,6 +1238,10 @@
     },
     {
       "key": "ManagerToken",
+      "value": ""
+    },
+    {
+      "key": "RegisterdToken",
       "value": ""
     }
   ]
