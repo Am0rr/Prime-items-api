@@ -25,7 +25,8 @@ public class MappingProfile : Profile
             .ForMember(dest => dest.TotalPrice, opt => opt.MapFrom(src => src.Quantity * src.UnitPrice));
 
         CreateMap<Order, OrderResponse>()
-            .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Status.ToString()));
+            .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Status.ToString()))
+            .ForMember(dest => dest.Items, opt => opt.MapFrom(src => src.OrderItems));
 
         CreateMap<User, UserResponse>()
             .ForMember(dest => dest.Role, opt => opt.MapFrom(src => src.Role.ToString()));
