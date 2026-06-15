@@ -27,7 +27,7 @@ public class OrderService : BaseService, IOrderService
     {
         await ValidateAsync(request);
 
-        var order = Order.Create(userId);
+        var order = new Order(userId);
 
         foreach (var item in request.Items)
         {

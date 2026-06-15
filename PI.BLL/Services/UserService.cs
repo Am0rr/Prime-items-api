@@ -33,7 +33,7 @@ public class UserService : BaseService, IUserService
 
         string passwordHash = BCrypt.Net.BCrypt.HashPassword(request.Password);
 
-        var user = User.Create(
+        var user = new User(
             request.Username,
             request.Email,
             passwordHash,
