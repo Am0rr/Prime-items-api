@@ -66,7 +66,7 @@ public class AuthService : BaseService, IAuthService
 
         var refreshTokenResult = _jwtProvider.GenerateRefreshToken();
 
-        var refreshToken = RefreshToken.Create(
+        var refreshToken = new RefreshToken(
             refreshTokenResult.Token,
             refreshTokenResult.ExpiresAt,
             user.Id

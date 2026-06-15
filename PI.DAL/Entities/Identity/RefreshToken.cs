@@ -10,7 +10,7 @@ public class RefreshToken : BaseEntity
 
     protected RefreshToken() { }
 
-    private RefreshToken(string token, DateTime expiresAt, Guid userId)
+    public RefreshToken(string token, DateTime expiresAt, Guid userId)
     {
         Token = token;
         ExpiresAt = expiresAt;
@@ -18,14 +18,5 @@ public class RefreshToken : BaseEntity
         UserId = userId;
     }
 
-    public static RefreshToken Create(string token, DateTime expiresAt, Guid userId)
-    {
-        return new RefreshToken(token, expiresAt, userId);
-    }
-
-    public void Revoke()
-    {
-        IsRevoked = true;
-    }
-
+    public void Revoke() => IsRevoked = true;
 }
