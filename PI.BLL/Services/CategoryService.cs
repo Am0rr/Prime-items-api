@@ -43,7 +43,7 @@ public class CategoryService : BaseService, ICategoryService
         var category = await _unitOfWork.Categories.GetByIdAsync(id, cancellationToken)
             ?? throw new KeyNotFoundException($"Category with ID {id} was not found.");
 
-        if (request.Name != null && request.Name != category.Name)
+        if (request.Name != null)
         {
             if (await _unitOfWork.Categories.ExistsByNameAsync(request.Name, cancellationToken))
                 throw new InvalidOperationException($"A category with the name '{request.Name}' already exists.");
@@ -51,7 +51,7 @@ public class CategoryService : BaseService, ICategoryService
             category.ChangeName(request.Name);
         }
 
-        if (request.Description != null && request.Description != category.Description)
+        if (request.Description != null)
         {
             category.ChangeDescription(request.Description);
         }
