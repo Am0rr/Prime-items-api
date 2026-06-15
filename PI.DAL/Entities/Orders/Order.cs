@@ -11,39 +11,22 @@ public class Order : BaseEntity
     public User User { get; private set; } = null!;
     public ICollection<OrderItem> OrderItems { get; private set; } = null!;
 
-    protected Order()
-    {
-        OrderItems = new List<OrderItem>();
-    }
+    protected Order() { }
 
-    private Order(Guid userId, OrderStatus status = OrderStatus.New) : this()
+    public Order(Guid userId, OrderStatus status = OrderStatus.New)
     {
         UserId = userId;
         Status = status;
         TotalAmount = 0;
     }
 
-    public static Order Create(Guid userId)
-    {
-        return new Order(userId);
-    }
-
     public void AddItem(Guid productId, int quantity, decimal unitPrice)
     {
-        if (quantity <= 0)
-            throw new ArgumentException("Quantity must be greater than zero.", nameof(quantity));
-
-        if (unitPrice < 0)
-            throw new ArgumentException("Unit price cannot be negative.", nameof(unitPrice));
-
-        var item = OrderItem.Create(this.Id, productId, quantity, unitPrice);
+        var item = OrderItem.Create(Id, productId, quantity, unitPrice);
         OrderItems.Add(item);
 
         TotalAmount += quantity * unitPrice;
     }
 
-    public void ChangeStatus(OrderStatus newStatus)
-    {
-        Status = newStatus;
-    }
+    public void ChangeStatus(OrderStatus newStatus) => Status = newStatus;
 }
