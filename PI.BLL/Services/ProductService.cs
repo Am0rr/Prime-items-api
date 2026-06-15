@@ -24,7 +24,7 @@ public class ProductService : BaseService, IProductService
 
     public async Task<ProductResponse> CreateAsync(CreateProductRequest request, CancellationToken cancellationToken)
     {
-        await ValidateAsync(request);
+        Validate(request);
 
         var category = await _unitOfWork.Categories.GetByIdAsync(request.CategoryId, cancellationToken)
             ?? throw new KeyNotFoundException($"Category with ID {request.CategoryId} was not found.");
@@ -48,7 +48,7 @@ public class ProductService : BaseService, IProductService
 
     public async Task UpdateAsync(Guid id, UpdateProductRequest request, CancellationToken cancellationToken)
     {
-        await ValidateAsync(request);
+        Validate(request);
 
         var product = await _unitOfWork.Products.GetByIdAsync(id, cancellationToken)
             ?? throw new KeyNotFoundException($"Product with ID {id} was not found.");

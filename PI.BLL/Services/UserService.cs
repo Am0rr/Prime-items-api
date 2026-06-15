@@ -23,7 +23,7 @@ public class UserService : BaseService, IUserService
 
     public async Task<UserResponse> CreateAsync(CreateUserRequest request, CancellationToken cancellationToken)
     {
-        await ValidateAsync(request);
+        Validate(request);
 
         if (await _unitOfWork.Users.ExistsByUsernameAsync(request.Username, cancellationToken))
             throw new InvalidOperationException("This username is already taken.");
@@ -48,7 +48,7 @@ public class UserService : BaseService, IUserService
 
     public async Task UpdateAsync(Guid id, UpdateUserRequest request, CancellationToken cancellationToken)
     {
-        await ValidateAsync(request);
+        Validate(request);
         var user = await _unitOfWork.Users.GetByIdAsync(id, cancellationToken)
             ?? throw new KeyNotFoundException($"User with Id {id} not found");
 
