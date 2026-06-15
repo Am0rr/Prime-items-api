@@ -21,7 +21,7 @@ public class AuthService : BaseService, IAuthService
 
     public async Task<AuthResponse> LoginAsync(LoginRequest request, CancellationToken cancellationToken)
     {
-        await ValidateAsync(request);
+        Validate(request);
 
         var user = await _unitOfWork.Users.GetByEmailAsync(request.Email, cancellationToken)
             ?? throw new UnauthorizedAccessException("Invalid email or password.");

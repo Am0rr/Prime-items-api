@@ -23,7 +23,7 @@ public class CategoryService : BaseService, ICategoryService
 
     public async Task<CategoryResponse> CreateAsync(CreateCategoryRequest request, CancellationToken cancellationToken)
     {
-        await ValidateAsync(request);
+        Validate(request);
 
         if (await _unitOfWork.Categories.ExistsByNameAsync(request.Name, cancellationToken))
             throw new InvalidOperationException($"A category with the name '{request.Name}' already exists.");
@@ -38,7 +38,7 @@ public class CategoryService : BaseService, ICategoryService
 
     public async Task UpdateAsync(Guid id, UpdateCategoryRequest request, CancellationToken cancellationToken)
     {
-        await ValidateAsync(request);
+        Validate(request);
 
         var category = await _unitOfWork.Categories.GetByIdAsync(id, cancellationToken)
             ?? throw new KeyNotFoundException($"Category with ID {id} was not found.");

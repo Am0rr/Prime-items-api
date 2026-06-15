@@ -12,13 +12,13 @@ public class BaseService
         _serviceProvider = serviceProvider;
     }
 
-    protected async Task ValidateAsync<TRequest>(TRequest request)
+    protected void Validate<TRequest>(TRequest request)
     {
         var validator = _serviceProvider.GetService<IValidator<TRequest>>();
 
         if (validator != null)
         {
-            await validator.ValidateAndThrowAsync(request);
+            validator.ValidateAndThrow(request);
         }
     }
 }

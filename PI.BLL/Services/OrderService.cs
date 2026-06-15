@@ -25,7 +25,7 @@ public class OrderService : BaseService, IOrderService
 
     public async Task<OrderResponse> CreateAsync(CreateOrderRequest request, Guid userId, CancellationToken cancellationToken)
     {
-        await ValidateAsync(request);
+        Validate(request);
 
         var order = new Order(userId);
 
@@ -50,7 +50,7 @@ public class OrderService : BaseService, IOrderService
 
     public async Task UpdateStatusAsync(Guid id, UpdateOrderStatusRequest request, CancellationToken cancellationToken)
     {
-        await ValidateAsync(request);
+        Validate(request);
 
         var order = await _unitOfWork.Orders.GetByIdAsync(id, cancellationToken)
             ?? throw new KeyNotFoundException($"Order with ID {id} not found.");
