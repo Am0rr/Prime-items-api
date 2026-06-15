@@ -58,11 +58,7 @@ public class OrderService : BaseService, IOrderService
         if (request.Status != null)
         {
             var status = Enum.Parse<OrderStatus>(request.Status, ignoreCase: true);
-
-            if (status != order.Status)
-            {
-                order.ChangeStatus(status);
-            }
+            order.ChangeStatus(status);
         }
 
         await _unitOfWork.SaveChangesAsync(cancellationToken);
