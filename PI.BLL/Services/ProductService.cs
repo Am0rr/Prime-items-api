@@ -53,7 +53,7 @@ public class ProductService : BaseService, IProductService
         var product = await _unitOfWork.Products.GetByIdAsync(id, cancellationToken)
             ?? throw new KeyNotFoundException($"Product with ID {id} was not found.");
 
-        if (request.CategoryId.HasValue && request.CategoryId.Value != product.CategoryId)
+        if (request.CategoryId.HasValue)
         {
             var category = await _unitOfWork.Categories.GetByIdAsync(request.CategoryId.Value, cancellationToken)
                 ?? throw new KeyNotFoundException($"Category with ID {request.CategoryId.Value} was not found.");
@@ -61,7 +61,7 @@ public class ProductService : BaseService, IProductService
             product.ChangeCategory(request.CategoryId.Value);
         }
 
-        if (request.Name != null && request.Name != product.Name)
+        if (request.Name != null)
         {
             if (await _unitOfWork.Products.ExistsByNameAsync(request.Name, cancellationToken))
                 throw new InvalidOperationException($"A product with the name '{request.Name}' already exists.");
@@ -69,22 +69,22 @@ public class ProductService : BaseService, IProductService
             product.ChangeName(request.Name);
         }
 
-        if (request.Description != null && request.Description != product.Description)
+        if (request.Description != null)
         {
             product.ChangeDescription(request.Description);
         }
 
-        if (request.Price.HasValue && request.Price.Value != product.Price)
+        if (request.Price.HasValue)
         {
             product.ChangePrice(request.Price.Value);
         }
 
-        if (request.StockQuantity.HasValue && request.StockQuantity.Value != product.StockQuantity)
+        if (request.StockQuantity.HasValue)
         {
             product.ChangeStockQuantity(request.StockQuantity.Value);
         }
 
-        if (request.ImageUrl != null && request.ImageUrl != product.ImageUrl)
+        if (request.ImageUrl != null)
         {
             product.ChangeImageUrl(request.ImageUrl);
         }
