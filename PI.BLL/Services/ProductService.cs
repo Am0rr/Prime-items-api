@@ -32,7 +32,7 @@ public class ProductService : BaseService, IProductService
         if (await _unitOfWork.Products.ExistsByNameAsync(request.Name, cancellationToken))
             throw new InvalidOperationException($"A product with the name '{request.Name}' already exists.");
 
-        var product = Product.Create(
+        var product = new Product(
             request.CategoryId,
             request.Name,
             request.Description,
