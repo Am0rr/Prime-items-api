@@ -11,7 +11,7 @@ public class User : BaseEntity
 
     protected User() { }
 
-    private User(string username, string email, string passwordHash, UserRole role = UserRole.Registered)
+    public User(string username, string email, string passwordHash, UserRole role = UserRole.Registered)
     {
         Username = username;
         Email = email;
@@ -19,30 +19,7 @@ public class User : BaseEntity
         Role = role;
     }
 
-    public static User Create(string username, string email, string passwordHash, UserRole role = UserRole.Registered)
-    {
-        if (string.IsNullOrWhiteSpace(username))
-            throw new ArgumentException("Username is required.", nameof(username));
-        if (string.IsNullOrWhiteSpace(email))
-            throw new ArgumentException("Email is required.", nameof(email));
-        if (string.IsNullOrWhiteSpace(passwordHash))
-            throw new ArgumentException("Password Hash is required", nameof(passwordHash));
-
-        return new User(username, email, passwordHash, role);
-    }
-
-    public void ChangeUsername(string newUsername)
-    {
-        Username = newUsername;
-    }
-
-    public void ChangeEmail(string newEmail)
-    {
-        Email = newEmail;
-    }
-
-    public void ChangeRole(UserRole newRole)
-    {
-        Role = newRole;
-    }
+    public void ChangeUsername(string newUsername) => Username = newUsername;
+    public void ChangeEmail(string newEmail) => Email = newEmail;
+    public void ChangeRole(UserRole newRole) => Role = newRole;
 }
