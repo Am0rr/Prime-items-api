@@ -13,21 +13,11 @@ public class OrderItem : BaseEntity
 
     protected OrderItem() { }
 
-    private OrderItem(Guid orderId, Guid productId, int quantity, decimal unitPrice)
+    public OrderItem(Guid orderId, Guid productId, int quantity, decimal unitPrice)
     {
         OrderId = orderId;
         ProductId = productId;
         Quantity = quantity;
         UnitPrice = unitPrice;
-    }
-
-    public static OrderItem Create(Guid orderId, Guid productId, int quantity, decimal unitPrice)
-    {
-        if (quantity <= 0)
-            throw new ArgumentException("Quantity must be greater than zero.", nameof(quantity));
-        if (unitPrice < 0)
-            throw new ArgumentException("Unit price cannot be negative.", nameof(unitPrice));
-
-        return new OrderItem(orderId, productId, quantity, unitPrice);
     }
 }

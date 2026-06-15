@@ -22,7 +22,7 @@ public class Order : BaseEntity
 
     public void AddItem(Guid productId, int quantity, decimal unitPrice)
     {
-        var item = OrderItem.Create(Id, productId, quantity, unitPrice);
+        var item = new OrderItem(Id, productId, quantity, unitPrice);
         OrderItems.Add(item);
 
         TotalAmount += quantity * unitPrice;
