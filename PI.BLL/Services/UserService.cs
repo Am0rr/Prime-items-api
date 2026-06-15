@@ -52,7 +52,7 @@ public class UserService : BaseService, IUserService
         var user = await _unitOfWork.Users.GetByIdAsync(id, cancellationToken)
             ?? throw new KeyNotFoundException($"User with Id {id} not found");
 
-        if (request.Username != null && request.Username != user.Username)
+        if (request.Username != null)
         {
             if (await _unitOfWork.Users.ExistsByUsernameAsync(request.Username, cancellationToken))
                 throw new InvalidOperationException("This username is already taken.");
@@ -60,7 +60,7 @@ public class UserService : BaseService, IUserService
             user.ChangeUsername(request.Username);
         }
 
-        if (request.Email != null && request.Email != user.Email)
+        if (request.Email != null)
         {
             if (await _unitOfWork.Users.ExistsByEmailAsync(request.Email, cancellationToken))
                 throw new InvalidOperationException("Account with this email address already exists.");
@@ -71,11 +71,7 @@ public class UserService : BaseService, IUserService
         if (request.Role != null)
         {
             var role = Enum.Parse<UserRole>(request.Role, ignoreCase: true);
-
-            if (role != user.Role)
-            {
-                user.ChangeRole(role);
-            }
+            user.ChangeRole(role);
         }
 
         await _unitOfWork.SaveChangesAsync(cancellationToken);
