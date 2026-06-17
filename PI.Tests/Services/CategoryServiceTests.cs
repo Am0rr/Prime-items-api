@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Moq;
+using MockQueryable.Moq;
 using PI.BLL.DTOs.Catalog;
 using PI.BLL.Services;
 using PI.DAL.Entities.Catalog;
@@ -34,14 +35,20 @@ public class CategoryServiceTests
             _serviceProviderMock.Object);
     }
 
+    private void SetupQuery(List<Category> categories)
+    {
+        var mockDbSet = MoqExtensions.BuildMockDbSet(categories);
+        _categoryRepositoryMock.Setup(r => r.Query()).Returns(mockDbSet.Object);
+    }
+
+
     [Fact]
     public async Task CreateAsync_SuccessPath_AddsCategoryAndSaves()
     {
         var request = new CreateCategoryRequest("New Category", "Description");
         var expectedResponse = new CategoryResponse { Id = Guid.NewGuid(), Name = request.Name, Description = request.Description };
 
-        _categoryRepositoryMock.Setup(r => r.ExistsByNameAsync(request.Name, It.IsAny<CancellationToken>()))
-            .ReturnsAsync(false);
+        SetupQuery(new List<Category>());
 
         _mapperMock.Setup(m => m.Map<CategoryResponse>(It.IsAny<Category>()))
             .Returns(expectedResponse);
@@ -51,7 +58,6 @@ public class CategoryServiceTests
         Assert.NotNull(result);
         Assert.Equal(expectedResponse.Name, result.Name);
 
-        _categoryRepositoryMock.Verify(r => r.ExistsByNameAsync(request.Name, It.IsAny<CancellationToken>()), Times.Once);
         _categoryRepositoryMock.Verify(r => r.Add(It.Is<Category>(c => c.Name == request.Name && c.Description == request.Description)), Times.Once);
         _unitOfWorkMock.Verify(u => u.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
     }
@@ -60,9 +66,9 @@ public class CategoryServiceTests
     public async Task CreateAsync_DuplicateName_ThrowsInvalidOperationException()
     {
         var request = new CreateCategoryRequest("Existing Category", "Description");
+        var existing = new Category("Existing Category", "Some description");
 
-        _categoryRepositoryMock.Setup(r => r.ExistsByNameAsync(request.Name, It.IsAny<CancellationToken>()))
-            .ReturnsAsync(true);
+        SetupQuery(new List<Category> { existing });
 
         await Assert.ThrowsAsync<InvalidOperationException>(() => _categoryService.CreateAsync(request, CancellationToken.None));
 
@@ -74,20 +80,19 @@ public class CategoryServiceTests
     public async Task UpdateAsync_SuccessPath_NameAndDescriptionUpdated_SavesChanges()
     {
         var id = Guid.NewGuid();
-        var category = Category.Create("Old Name", "Old Description");
+        var category = new Category("Old Name", "Old Description");
         var request = new UpdateCategoryRequest("New Name", "New Description");
 
         _categoryRepositoryMock.Setup(r => r.GetByIdAsync(id, It.IsAny<CancellationToken>()))
             .ReturnsAsync(category);
-        _categoryRepositoryMock.Setup(r => r.ExistsByNameAsync(request.Name!, It.IsAny<CancellationToken>()))
-            .ReturnsAsync(false);
+
+        SetupQuery(new List<Category>());
 
         await _categoryService.UpdateAsync(id, request, CancellationToken.None);
 
         Assert.Equal(request.Name, category.Name);
         Assert.Equal(request.Description, category.Description);
 
-        _categoryRepositoryMock.Verify(r => r.ExistsByNameAsync(request.Name!, It.IsAny<CancellationToken>()), Times.Once);
         _unitOfWorkMock.Verify(u => u.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
     }
 
@@ -95,18 +100,16 @@ public class CategoryServiceTests
     public async Task UpdateAsync_SuccessPath_NoNameChange_DoesNotCheckExistenceAndSaves()
     {
         var id = Guid.NewGuid();
-        var category = Category.Create("Same Name", "Old Description");
+        var category = new Category("Same Name", "Old Description");
         var request = new UpdateCategoryRequest("Same Name", "New Description");
 
-        _categoryRepositoryMock.Setup(r => r.GetByIdAsync(id, It.IsAny<CancellationToken>()))
-            .ReturnsAsync(category);
+        SetupQuery(new List<Category>());
 
         await _categoryService.UpdateAsync(id, request, CancellationToken.None);
 
         Assert.Equal("Same Name", category.Name);
         Assert.Equal(request.Description, category.Description);
 
-        _categoryRepositoryMock.Verify(r => r.ExistsByNameAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Never);
         _unitOfWorkMock.Verify(u => u.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
     }
 
@@ -128,13 +131,13 @@ public class CategoryServiceTests
     public async Task UpdateAsync_FailDuplicateName_ThrowsInvalidOperationException()
     {
         var id = Guid.NewGuid();
-        var category = Category.Create("Old Name", "Description");
+        var category = new Category("Old Name", "Description");
         var request = new UpdateCategoryRequest("Existing Name", "Description");
 
         _categoryRepositoryMock.Setup(r => r.GetByIdAsync(id, It.IsAny<CancellationToken>()))
             .ReturnsAsync(category);
-        _categoryRepositoryMock.Setup(r => r.ExistsByNameAsync(request.Name!, It.IsAny<CancellationToken>()))
-            .ReturnsAsync(true);
+
+        SetupQuery(new List<Category>());
 
         await Assert.ThrowsAsync<InvalidOperationException>(() => _categoryService.UpdateAsync(id, request, CancellationToken.None));
 
@@ -145,7 +148,7 @@ public class CategoryServiceTests
     public async Task DeleteAsync_SuccessPath_DeletesCategoryAndSaves()
     {
         var id = Guid.NewGuid();
-        var category = Category.Create("Name", "Description");
+        var category = new Category("Name", "Description");
 
         _categoryRepositoryMock.Setup(r => r.GetByIdAsync(id, It.IsAny<CancellationToken>()))
             .ReturnsAsync(category);
@@ -174,7 +177,7 @@ public class CategoryServiceTests
     public async Task GetByIdAsync_SuccessPath_ReturnsMappedCategory()
     {
         var id = Guid.NewGuid();
-        var category = Category.Create("Name", "Description");
+        var category = new Category("Name", "Description");
         var expectedResponse = new CategoryResponse { Id = id, Name = "Name", Description = "Description" };
 
         _categoryRepositoryMock.Setup(r => r.GetByIdAsync(id, It.IsAny<CancellationToken>()))
@@ -207,8 +210,8 @@ public class CategoryServiceTests
     {
         var categories = new List<Category>
         {
-            Category.Create("Category 1", "Desc 1"),
-            Category.Create("Category 2", "Desc 2")
+            new Category("Category 1", "Desc 1"),
+            new Category("Category 2", "Desc 2")
         };
         var expectedResponses = new List<CategoryResponse>
         {
