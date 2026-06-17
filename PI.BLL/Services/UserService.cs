@@ -4,6 +4,7 @@ using PI.DAL.Interfaces;
 using PI.BLL.DTOs.Identity;
 using PI.DAL.Entities.Identity;
 using PI.DAL.Enums;
+using Microsoft.EntityFrameworkCore;
 
 namespace PI.BLL.Services;
 
@@ -25,10 +26,10 @@ public class UserService : BaseService, IUserService
     {
         Validate(request);
 
-        if (await _unitOfWork.Users.ExistsByUsernameAsync(request.Username, cancellationToken))
+        if (await _unitOfWork.Users.Query().AnyAsync(u => u.Username == request.Username, cancellationToken))
             throw new InvalidOperationException("This username is already taken.");
 
-        if (await _unitOfWork.Users.ExistsByEmailAsync(request.Email, cancellationToken))
+        if (await _unitOfWork.Users.Query().AnyAsync(u => u.Email == request.Email, cancellationToken))
             throw new InvalidOperationException("Account with this email address already exists.");
 
         string passwordHash = BCrypt.Net.BCrypt.HashPassword(request.Password);
@@ -54,7 +55,7 @@ public class UserService : BaseService, IUserService
 
         if (request.Username != null)
         {
-            if (await _unitOfWork.Users.ExistsByUsernameAsync(request.Username, cancellationToken))
+            if (await _unitOfWork.Users.Query().AnyAsync(u => u.Username == request.Username, cancellationToken))
                 throw new InvalidOperationException("This username is already taken.");
 
             user.ChangeUsername(request.Username);
@@ -62,7 +63,7 @@ public class UserService : BaseService, IUserService
 
         if (request.Email != null)
         {
-            if (await _unitOfWork.Users.ExistsByEmailAsync(request.Email, cancellationToken))
+            if (await _unitOfWork.Users.Query().AnyAsync(u => u.Email == request.Email, cancellationToken))
                 throw new InvalidOperationException("Account with this email address already exists.");
 
             user.ChangeEmail(request.Email);
