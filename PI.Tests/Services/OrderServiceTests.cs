@@ -91,7 +91,7 @@ public class OrderServiceTests
         var product = new Product(Guid.NewGuid(), "Test product", "Test description", 20m, 5, null);
         var request = new CreateOrderRequest(new List<OrderItemRequest>
         {
-            new OrderItemRequest(productId, 2)
+            new OrderItemRequest(productId, 10)
         });
 
         _productRepoMock

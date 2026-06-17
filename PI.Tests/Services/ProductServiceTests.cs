@@ -121,11 +121,17 @@ public class ProductServiceTests
         var product = new Product(categoryId, "Same Name", "Same Desc", 100m, 5, "same.png");
         var request = new UpdateProductRequest(categoryId, "Same Name", "Same Desc", 100m, 5, "same.png");
 
+        _productRepositoryMock.Setup(r => r.GetByIdAsync(productId, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(product);
+
+        _categoryRepositoryMock.Setup(r => r.GetByIdAsync(categoryId, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new Category("Some", "Category"));
+
         SetupQuery(new List<Product>());
 
         await _productService.UpdateAsync(productId, request, CancellationToken.None);
 
-        _categoryRepositoryMock.Verify(r => r.GetByIdAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>()), Times.Never);
+        _categoryRepositoryMock.Verify(r => r.GetByIdAsync(categoryId, It.IsAny<CancellationToken>()), Times.Once);
         _unitOfWorkMock.Verify(u => u.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
     }
 

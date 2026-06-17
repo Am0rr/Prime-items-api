@@ -9,7 +9,7 @@ public class Order : BaseEntity
     public OrderStatus Status { get; private set; }
     public decimal TotalAmount { get; private set; }
     public User User { get; private set; } = null!;
-    public ICollection<OrderItem> OrderItems { get; private set; } = null!;
+    public ICollection<OrderItem> OrderItems { get; private set; } = new List<OrderItem>();
 
     protected Order() { }
 

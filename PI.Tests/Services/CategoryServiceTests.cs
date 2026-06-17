@@ -66,9 +66,9 @@ public class CategoryServiceTests
     public async Task CreateAsync_DuplicateName_ThrowsInvalidOperationException()
     {
         var request = new CreateCategoryRequest("Existing Category", "Description");
-        var existing = new Category("Existing Category", "Some description");
+        var duplicateCategory = new Category("Existing Category", "Some description");
 
-        SetupQuery(new List<Category> { existing });
+        SetupQuery(new List<Category> { duplicateCategory });
 
         await Assert.ThrowsAsync<InvalidOperationException>(() => _categoryService.CreateAsync(request, CancellationToken.None));
 
@@ -103,6 +103,9 @@ public class CategoryServiceTests
         var category = new Category("Same Name", "Old Description");
         var request = new UpdateCategoryRequest("Same Name", "New Description");
 
+        _categoryRepositoryMock.Setup(r => r.GetByIdAsync(id, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(category);
+
         SetupQuery(new List<Category>());
 
         await _categoryService.UpdateAsync(id, request, CancellationToken.None);
@@ -132,12 +135,13 @@ public class CategoryServiceTests
     {
         var id = Guid.NewGuid();
         var category = new Category("Old Name", "Description");
-        var request = new UpdateCategoryRequest("Existing Name", "Description");
+        var duplicateCategory = new Category("Old Name", "Some Description");
+        var request = new UpdateCategoryRequest("Old Name", "Description");
 
         _categoryRepositoryMock.Setup(r => r.GetByIdAsync(id, It.IsAny<CancellationToken>()))
             .ReturnsAsync(category);
 
-        SetupQuery(new List<Category>());
+        SetupQuery(new List<Category> { duplicateCategory });
 
         await Assert.ThrowsAsync<InvalidOperationException>(() => _categoryService.UpdateAsync(id, request, CancellationToken.None));
 
