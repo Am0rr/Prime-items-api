@@ -37,5 +37,10 @@ public abstract class BaseRepository<T> : IBaseRepository<T> where T : BaseEntit
     {
         _dbSet.Remove(item);
     }
+
+    public IQueryable<T> Query()
+    {
+        return _dbSet.AsQueryable();
+    }
 }
 
