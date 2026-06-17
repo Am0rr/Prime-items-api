@@ -9,4 +9,5 @@ public interface IBaseRepository<T> where T : BaseEntity
     void Add(T item);
     void Update(T item);
     void Delete(T item);
+    IQueryable<T> Query();
 }
