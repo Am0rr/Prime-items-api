@@ -77,9 +77,4 @@ public class ProductRepository : BaseRepository<Product>, IProductRepository
             TotalCount = totalCount
         };
     }
-
-    public async Task<bool> ExistsByNameAsync(string name, CancellationToken cancellationToken)
-    {
-        return await _dbSet.AnyAsync(p => p.Name == name, cancellationToken);
-    }
 }

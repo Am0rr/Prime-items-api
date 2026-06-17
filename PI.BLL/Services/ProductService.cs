@@ -4,6 +4,7 @@ using PI.BLL.Interfaces;
 using PI.DAL.Interfaces;
 using PI.DAL.Entities.Catalog;
 using PI.DAL.Models.Catalog;
+using Microsoft.EntityFrameworkCore;
 
 namespace PI.BLL.Services;
 
@@ -29,7 +30,7 @@ public class ProductService : BaseService, IProductService
         var category = await _unitOfWork.Categories.GetByIdAsync(request.CategoryId, cancellationToken)
             ?? throw new KeyNotFoundException($"Category with ID {request.CategoryId} was not found.");
 
-        if (await _unitOfWork.Products.ExistsByNameAsync(request.Name, cancellationToken))
+        if (await _unitOfWork.Products.Query().AnyAsync(p => p.Name == request.Name, cancellationToken))
             throw new InvalidOperationException($"A product with the name '{request.Name}' already exists.");
 
         var product = new Product(
@@ -63,7 +64,7 @@ public class ProductService : BaseService, IProductService
 
         if (request.Name != null)
         {
-            if (await _unitOfWork.Products.ExistsByNameAsync(request.Name, cancellationToken))
+            if (await _unitOfWork.Products.Query().AnyAsync(p => p.Name == request.Name, cancellationToken))
                 throw new InvalidOperationException($"A product with the name '{request.Name}' already exists.");
 
             product.ChangeName(request.Name);
