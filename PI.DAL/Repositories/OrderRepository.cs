@@ -7,9 +7,7 @@ namespace PI.DAL.Repositories;
 
 public class OrderRepository : BaseRepository<Order>, IOrderRepository
 {
-    public OrderRepository(AppDbContext context) : base(context)
-    {
-    }
+    public OrderRepository(AppDbContext context) : base(context) { }
 
     public override async Task<Order?> GetByIdAsync(Guid id, CancellationToken cancellationToken)
     {

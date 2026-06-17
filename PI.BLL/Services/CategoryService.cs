@@ -3,6 +3,7 @@ using PI.BLL.DTOs.Catalog;
 using PI.BLL.Interfaces;
 using PI.DAL.Interfaces;
 using PI.DAL.Entities.Catalog;
+using Microsoft.EntityFrameworkCore;
 
 namespace PI.BLL.Services;
 
@@ -25,7 +26,7 @@ public class CategoryService : BaseService, ICategoryService
     {
         Validate(request);
 
-        if (await _unitOfWork.Categories.ExistsByNameAsync(request.Name, cancellationToken))
+        if (await _unitOfWork.Categories.Query().AnyAsync(c => c.Name == request.Name, cancellationToken))
             throw new InvalidOperationException($"A category with the name '{request.Name}' already exists.");
 
         var category = new Category(request.Name, request.Description);
@@ -45,7 +46,7 @@ public class CategoryService : BaseService, ICategoryService
 
         if (request.Name != null)
         {
-            if (await _unitOfWork.Categories.ExistsByNameAsync(request.Name, cancellationToken))
+            if (await _unitOfWork.Categories.Query().AnyAsync(c => c.Name == request.Name, cancellationToken))
                 throw new InvalidOperationException($"A category with the name '{request.Name}' already exists.");
 
             category.ChangeName(request.Name);
