@@ -42,7 +42,7 @@ public class AuthServiceTests
     public async Task LoginAsync_SuccessPath_ReturnsAuthResponse()
     {
         var passwordHash = BCrypt.Net.BCrypt.HashPassword("password123");
-        var user = User.Create("testuser", "test@test.com", passwordHash, UserRole.Registered);
+        var user = new User("testuser", "test@test.com", passwordHash, UserRole.Registered);
         var request = new LoginRequest("test@test.com", "password123");
 
         _userRepositoryMock
@@ -89,7 +89,7 @@ public class AuthServiceTests
     public async Task LoginAsync_WrongPassword_ThrowsUnauthorizedAccessException()
     {
         var passwordHash = BCrypt.Net.BCrypt.HashPassword("correctpassword");
-        var user = User.Create("testuser", "test@test.com", passwordHash, UserRole.Registered);
+        var user = new User("testuser", "test@test.com", passwordHash, UserRole.Registered);
         var request = new LoginRequest("test@test.com", "wrongpassword");
 
         _userRepositoryMock
@@ -106,8 +106,8 @@ public class AuthServiceTests
     [Fact]
     public async Task RefreshAsync_SuccessPath_RevokesOldAndReturnsNewTokens()
     {
-        var user = User.Create("testuser", "test@test.com", "hash", UserRole.Registered);
-        var oldToken = RefreshToken.Create("old-token", DateTime.UtcNow.AddDays(7), user.Id);
+        var user = new User("testuser", "test@test.com", "hash", UserRole.Registered);
+        var oldToken = new RefreshToken("old-token", DateTime.UtcNow.AddDays(7), user.Id);
 
         _refreshTokenRepositoryMock
             .Setup(r => r.GetByTokenAsync("old-token", It.IsAny<CancellationToken>()))
@@ -149,7 +149,7 @@ public class AuthServiceTests
     [Fact]
     public async Task RefreshAsync_TokenRevoked_ThrowsUnauthorizedAccessException()
     {
-        var token = RefreshToken.Create("revoked-token", DateTime.UtcNow.AddDays(7), Guid.NewGuid());
+        var token = new RefreshToken("revoked-token", DateTime.UtcNow.AddDays(7), Guid.NewGuid());
         token.Revoke();
 
         _refreshTokenRepositoryMock
@@ -165,7 +165,7 @@ public class AuthServiceTests
     [Fact]
     public async Task RefreshAsync_TokenExpired_ThrowsUnauthorizedAccessException()
     {
-        var token = RefreshToken.Create("expired-token", DateTime.UtcNow.AddDays(-1), Guid.NewGuid());
+        var token = new RefreshToken("expired-token", DateTime.UtcNow.AddDays(-1), Guid.NewGuid());
 
         _refreshTokenRepositoryMock
             .Setup(r => r.GetByTokenAsync("expired-token", It.IsAny<CancellationToken>()))
@@ -180,7 +180,7 @@ public class AuthServiceTests
     [Fact]
     public async Task RevokeAsync_SuccessPath_RevokesTokenAndSaves()
     {
-        var token = RefreshToken.Create("active-token", DateTime.UtcNow.AddDays(7), Guid.NewGuid());
+        var token = new RefreshToken("active-token", DateTime.UtcNow.AddDays(7), Guid.NewGuid());
 
         _refreshTokenRepositoryMock
             .Setup(r => r.GetByTokenAsync("active-token", It.IsAny<CancellationToken>()))
@@ -208,7 +208,7 @@ public class AuthServiceTests
     [Fact]
     public async Task RevokeAsync_TokenAlreadyRevoked_DoesNotSave()
     {
-        var token = RefreshToken.Create("revoked-token", DateTime.UtcNow.AddDays(7), Guid.NewGuid());
+        var token = new RefreshToken("revoked-token", DateTime.UtcNow.AddDays(7), Guid.NewGuid());
         token.Revoke();
 
         _refreshTokenRepositoryMock
