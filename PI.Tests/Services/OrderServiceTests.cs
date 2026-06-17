@@ -7,7 +7,6 @@ using PI.DAL.Entities.Catalog;
 using PI.DAL.Entities.Orders;
 using PI.DAL.Enums;
 using PI.DAL.Interfaces;
-using Xunit;
 
 namespace PI.Tests.Services;
 
@@ -40,15 +39,12 @@ public class OrderServiceTests
             _serviceProviderMock.Object);
     }
 
-    private static Product CreateProduct(int stockQuantity, decimal price = 10m) =>
-        Product.Create(Guid.NewGuid(), "Test product", "Test description", price, stockQuantity, null);
-
     [Fact]
     public async Task CreateAsync_WithValidData_ReducesStockAddsOrderAndReturnsResponse()
     {
         var userId = Guid.NewGuid();
         var productId = Guid.NewGuid();
-        var product = CreateProduct(stockQuantity: 5, price: 20m);
+        var product = new Product(Guid.NewGuid(), "Test product", "Test description", 20m, 5, null);
         var request = new CreateOrderRequest(new List<OrderItemRequest>
         {
             new OrderItemRequest(productId, 2)
@@ -92,7 +88,7 @@ public class OrderServiceTests
     public async Task CreateAsync_WhenStockIsInsufficient_ThrowsInvalidOperationException()
     {
         var productId = Guid.NewGuid();
-        var product = CreateProduct(stockQuantity: 1);
+        var product = new Product(Guid.NewGuid(), "Test product", "Test description", 20m, 5, null);
         var request = new CreateOrderRequest(new List<OrderItemRequest>
         {
             new OrderItemRequest(productId, 2)
@@ -111,7 +107,7 @@ public class OrderServiceTests
     public async Task UpdateStatusAsync_WithExistingOrder_ChangesStatusAndSaves()
     {
         var orderId = Guid.NewGuid();
-        var order = Order.Create(Guid.NewGuid());
+        var order = new Order(Guid.NewGuid());
         var request = new UpdateOrderStatusRequest(nameof(OrderStatus.Paid));
 
         _orderRepoMock
@@ -142,7 +138,7 @@ public class OrderServiceTests
     public async Task DeleteAsync_WithExistingOrder_DeletesAndSaves()
     {
         var orderId = Guid.NewGuid();
-        var order = Order.Create(Guid.NewGuid());
+        var order = new Order(Guid.NewGuid());
 
         _orderRepoMock
             .Setup(r => r.GetByIdAsync(orderId, It.IsAny<CancellationToken>()))
@@ -171,7 +167,7 @@ public class OrderServiceTests
     {
         var userId = Guid.NewGuid();
         var orderId = Guid.NewGuid();
-        var order = Order.Create(userId);
+        var order = new Order(userId);
         var expectedResponse = new OrderResponse { Id = orderId, UserId = userId };
 
         _orderRepoMock
@@ -194,7 +190,7 @@ public class OrderServiceTests
         var ownerId = Guid.NewGuid();
         var callerId = Guid.NewGuid();
         var orderId = Guid.NewGuid();
-        var order = Order.Create(ownerId);
+        var order = new Order(ownerId);
         var expectedResponse = new OrderResponse { Id = orderId, UserId = ownerId };
 
         _orderRepoMock
@@ -215,7 +211,7 @@ public class OrderServiceTests
         var ownerId = Guid.NewGuid();
         var callerId = Guid.NewGuid();
         var orderId = Guid.NewGuid();
-        var order = Order.Create(ownerId);
+        var order = new Order(ownerId);
 
         _orderRepoMock
             .Setup(r => r.GetByIdAsync(orderId, It.IsAny<CancellationToken>()))
@@ -241,7 +237,7 @@ public class OrderServiceTests
     public async Task GetUserOrdersAsync_WhenOwnerRequestsOwnOrders_ReturnsResponses()
     {
         var userId = Guid.NewGuid();
-        var orders = new List<Order> { Order.Create(userId) };
+        var orders = new List<Order> { new Order(userId) };
         var expected = new List<OrderResponse> { new OrderResponse { UserId = userId } };
 
         _orderRepoMock
@@ -263,7 +259,7 @@ public class OrderServiceTests
     {
         var targetUserId = Guid.NewGuid();
         var callerId = Guid.NewGuid();
-        var orders = new List<Order> { Order.Create(targetUserId) };
+        var orders = new List<Order> { new Order(targetUserId) };
         var expected = new List<OrderResponse> { new OrderResponse { UserId = targetUserId } };
 
         _orderRepoMock
@@ -293,8 +289,8 @@ public class OrderServiceTests
     {
         var orders = new List<Order>
         {
-            Order.Create(Guid.NewGuid()),
-            Order.Create(Guid.NewGuid())
+            new Order(Guid.NewGuid()),
+            new Order(Guid.NewGuid())
         };
         var expected = new List<OrderResponse>
         {
