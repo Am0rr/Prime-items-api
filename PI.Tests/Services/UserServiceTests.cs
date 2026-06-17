@@ -1,4 +1,5 @@
 using AutoMapper;
+using MockQueryable.Moq;
 using Moq;
 using PI.BLL.DTOs.Identity;
 using PI.BLL.Services;
@@ -35,16 +36,20 @@ public class UserServiceTests
             _serviceProviderMock.Object);
     }
 
+    private void SetupQuery(List<User> users)
+    {
+        var mockDbSet = MoqExtensions.BuildMockDbSet(users);
+        _userRepositoryMock.Setup(r => r.Query()).Returns(mockDbSet.Object);
+    }
+
     [Fact]
     public async Task CreateAsync_SuccessPath_AddsUserAndSaves()
     {
         var request = new CreateUserRequest("username", "email@test.com", "Password123!");
         var expectedResponse = new UserResponse { Id = Guid.NewGuid(), Username = request.Username, Email = request.Email };
 
-        _userRepositoryMock.Setup(r => r.ExistsByUsernameAsync(request.Username, It.IsAny<CancellationToken>()))
-            .ReturnsAsync(false);
-        _userRepositoryMock.Setup(r => r.ExistsByEmailAsync(request.Email, It.IsAny<CancellationToken>()))
-            .ReturnsAsync(false);
+        SetupQuery(new List<User>());
+
         _mapperMock.Setup(m => m.Map<UserResponse>(It.IsAny<User>()))
             .Returns(expectedResponse);
 
@@ -53,8 +58,6 @@ public class UserServiceTests
         Assert.NotNull(result);
         Assert.Equal(expectedResponse.Username, result.Username);
 
-        _userRepositoryMock.Verify(r => r.ExistsByUsernameAsync(request.Username, It.IsAny<CancellationToken>()), Times.Once);
-        _userRepositoryMock.Verify(r => r.ExistsByEmailAsync(request.Email, It.IsAny<CancellationToken>()), Times.Once);
         _userRepositoryMock.Verify(r => r.Add(It.Is<User>(u => u.Username == request.Username && u.Email == request.Email)), Times.Once);
         _unitOfWorkMock.Verify(u => u.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
     }
@@ -63,9 +66,9 @@ public class UserServiceTests
     public async Task CreateAsync_DuplicateUsername_ThrowsInvalidOperationException()
     {
         var request = new CreateUserRequest("existing", "email@test.com", "Password123!");
+        var duplicateUser = new User("existing", "fefe@test.com", "24443ee32!");
 
-        _userRepositoryMock.Setup(r => r.ExistsByUsernameAsync(request.Username, It.IsAny<CancellationToken>()))
-            .ReturnsAsync(true);
+        SetupQuery(new List<User> { duplicateUser });
 
         await Assert.ThrowsAsync<InvalidOperationException>(() => _userService.CreateAsync(request, CancellationToken.None));
 
@@ -77,11 +80,9 @@ public class UserServiceTests
     public async Task CreateAsync_DuplicateEmail_ThrowsInvalidOperationException()
     {
         var request = new CreateUserRequest("username", "existing@test.com", "Password123!");
+        var duplicateUser = new User("topchik", "existing@test.com", "24443ee32!");
 
-        _userRepositoryMock.Setup(r => r.ExistsByUsernameAsync(request.Username, It.IsAny<CancellationToken>()))
-            .ReturnsAsync(false);
-        _userRepositoryMock.Setup(r => r.ExistsByEmailAsync(request.Email, It.IsAny<CancellationToken>()))
-            .ReturnsAsync(true);
+        SetupQuery(new List<User> { duplicateUser });
 
         await Assert.ThrowsAsync<InvalidOperationException>(() => _userService.CreateAsync(request, CancellationToken.None));
 
@@ -93,15 +94,13 @@ public class UserServiceTests
     public async Task UpdateAsync_SuccessPath_UpdatesUsernameAndEmail_SavesChanges()
     {
         var id = Guid.NewGuid();
-        var user = User.Create("oldname", "old@test.com", "hash", UserRole.Registered);
+        var user = new User("oldname", "old@test.com", "hash", UserRole.Registered);
         var request = new UpdateUserRequest("newname", "new@test.com", null);
 
         _userRepositoryMock.Setup(r => r.GetByIdAsync(id, It.IsAny<CancellationToken>()))
             .ReturnsAsync(user);
-        _userRepositoryMock.Setup(r => r.ExistsByUsernameAsync(request.Username!, It.IsAny<CancellationToken>()))
-            .ReturnsAsync(false);
-        _userRepositoryMock.Setup(r => r.ExistsByEmailAsync(request.Email!, It.IsAny<CancellationToken>()))
-            .ReturnsAsync(false);
+
+        SetupQuery(new List<User>());
 
         await _userService.UpdateAsync(id, request, CancellationToken.None);
 
@@ -129,13 +128,14 @@ public class UserServiceTests
     public async Task UpdateAsync_DuplicateUsername_ThrowsInvalidOperationException()
     {
         var id = Guid.NewGuid();
-        var user = User.Create("oldname", "old@test.com", "hash", UserRole.Registered);
-        var request = new UpdateUserRequest("takenname", null, null);
+        var user = new User("oldname", "old@test.com", "hash", UserRole.Registered);
+        var duplicateUser = new User("oldname", "feffe@test.com", "hassh", UserRole.Registered);
+        var request = new UpdateUserRequest("oldname", null, null);
 
         _userRepositoryMock.Setup(r => r.GetByIdAsync(id, It.IsAny<CancellationToken>()))
             .ReturnsAsync(user);
-        _userRepositoryMock.Setup(r => r.ExistsByUsernameAsync(request.Username!, It.IsAny<CancellationToken>()))
-            .ReturnsAsync(true);
+
+        SetupQuery(new List<User> { duplicateUser });
 
         await Assert.ThrowsAsync<InvalidOperationException>(() => _userService.UpdateAsync(id, request, CancellationToken.None));
 
@@ -146,7 +146,7 @@ public class UserServiceTests
     public async Task DeleteAsync_SuccessPath_DeletesUserAndSaves()
     {
         var id = Guid.NewGuid();
-        var user = User.Create("username", "email@test.com", "hash", UserRole.Registered);
+        var user = new User("username", "email@test.com", "hash", UserRole.Registered);
 
         _userRepositoryMock.Setup(r => r.GetByIdAsync(id, It.IsAny<CancellationToken>()))
             .ReturnsAsync(user);
@@ -175,7 +175,7 @@ public class UserServiceTests
     public async Task GetByIdAsync_SuccessPath_ReturnsMappedUser()
     {
         var id = Guid.NewGuid();
-        var user = User.Create("username", "email@test.com", "hash", UserRole.Registered);
+        var user = new User("username", "email@test.com", "hash", UserRole.Registered);
         var expectedResponse = new UserResponse { Id = id, Username = "username", Email = "email@test.com" };
 
         _userRepositoryMock.Setup(r => r.GetByIdAsync(id, It.IsAny<CancellationToken>()))
@@ -206,7 +206,7 @@ public class UserServiceTests
     public async Task GetByEmailAsync_SuccessPath_ReturnsMappedUser()
     {
         var email = "email@test.com";
-        var user = User.Create("username", email, "hash", UserRole.Registered);
+        var user = new User("username", email, "hash", UserRole.Registered);
         var expectedResponse = new UserResponse { Id = Guid.NewGuid(), Username = "username", Email = email };
 
         _userRepositoryMock.Setup(r => r.GetByEmailAsync(email, It.IsAny<CancellationToken>()))
@@ -238,8 +238,8 @@ public class UserServiceTests
     {
         var users = new List<User>
         {
-            User.Create("user1", "user1@test.com", "hash", UserRole.Registered),
-            User.Create("user2", "user2@test.com", "hash", UserRole.Registered)
+            new User("user1", "user1@test.com", "hash", UserRole.Registered),
+            new User("user2", "user2@test.com", "hash", UserRole.Registered)
         };
         var expectedResponses = new List<UserResponse>
         {
